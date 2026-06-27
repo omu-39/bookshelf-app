@@ -45,7 +45,7 @@ class Book extends Model
         return $this->hasMany(Review::class);
     }
 
-    public function favoredByUsers(): BelongsToMany
+    public function favoritedUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'favorite_books');
     }

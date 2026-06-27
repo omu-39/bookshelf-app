@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Model\User;
-use App\Model\Book;
-use App\Model\Review;
+use App\Models\User;
+use App\Models\Book;
+use App\Models\Review;
 
 class ReviewSeeder extends Seeder
 {
