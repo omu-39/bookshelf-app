@@ -25,8 +25,8 @@ class GenreSeeder extends Seeder
             '旅行',
         ];
 
-        Genre::firstOrCreate(
-            collect($genres)->map(fn($g) => ['name' => $g])->toArray()
-        );
+        foreach ($genres as $genre) {
+            Genre::firstOrCreate(['name' => $genre]);
+        }
     }
 }
