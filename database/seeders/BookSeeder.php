@@ -31,20 +31,20 @@ class BookSeeder extends Seeder
             ['title' => 'コンテナ物語', 'author' => 'マルク・レビンソン', 'isbn' => 9784822251468, 'publication_date' => '2007-01-18', 'genres' => ['ビジネス', '歴史'], 'description' => '鉄のコンテナが世界の物流を劇的に変え、グローバル経済を生み出した歴史を描いたノンフィクション。技術革新と経済変革の関係を解説します。', 'image_url' => 'https://placehold.co/200x300/e2e8f0/475569?text=11'],
         ];
 
-        foreach ($books as $book) {
+        foreach ($books as $data) {
             $book = Book::firstOrCreate(
                 [
                     'user_id' => $user->id,
-                    'title' => $book['title'],
-                    'author' => $book['author'],
-                    'isbn' => $book['isbn'],
-                    'published_date' => $book['publication_date'],
-                    'description' => $book['description'],
-                    'image_url' => $book['image_url'],
+                    'title' => $data['title'],
+                    'author' => $data['author'],
+                    'isbn' => $data['isbn'],
+                    'published_date' => $data['publication_date'],
+                    'description' => $data['description'],
+                    'image_url' => $data['image_url'],
                 ]
             );
 
-            $genreIds = collect($book['genres'])->map(fn ($name) => $genres[$name]->id)->toArray();
+            $genreIds = collect($data['genres'])->map(fn ($name) => $genres[$name]->id)->toArray();
             $book->genres()->sync($genreIds);
         }
     }
