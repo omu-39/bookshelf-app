@@ -20,7 +20,7 @@ class ReviewLikeSeeder extends Seeder
         foreach ($reviews as $review) {
             $randomUsers = $users->random(rand(0, 3));
 
-            $review->likedUsers()->syncWithoutDetaching($randomUsers->pluck('id'));
+            $review->likedByUsers()->syncWithoutDetaching($randomUsers->pluck('id'));
         }
     }
 }
