@@ -25,7 +25,7 @@ class ReviewSeeder extends Seeder
                 Review::create([
                     'book_id' => $book->id,
                     'user_id' => $user->id,
-                    'star_rating' => rand(3, 5),
+                    'rating' => rand(3, 5),
                     'comment' => fake()->paragraph(),
                 ]);
             }

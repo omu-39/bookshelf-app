@@ -21,7 +21,7 @@ class ReviewFactory extends Factory
         return [
             'book_id' => Book::factory(),
             'user_id' => User::factory(),
-            'star_rating' => rand(3, 5),
+            'rating' => rand(3, 5),
             'comment' => fake()->paragraph(),
         ];
     }

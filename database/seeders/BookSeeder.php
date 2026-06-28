@@ -38,7 +38,7 @@ class BookSeeder extends Seeder
                     'title' => $book['title'],
                     'author' => $book['author'],
                     'isbn' => $book['isbn'],
-                    'publication_date' => $book['publication_date'],
+                    'published_date' => $book['publication_date'],
                     'description' => $book['description'],
                     'image_url' => $book['image_url'],
                 ]
