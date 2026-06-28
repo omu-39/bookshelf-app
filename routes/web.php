@@ -13,13 +13,6 @@ use App\Http\Controllers\BookController;
 |
 */
 
-Route::get('/books', [BookController::class, 'index'])->name('books.index');
-Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
-
-// 仮のルーティング
-Route::get('/ranking', [RankingController::class,])->name('ranking.index');
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books/create', [BookController::class, 'store'])->name('books.store');
@@ -31,3 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/favorites', [FavoriteController::class,])->name('favorites.index');
     Route::get('/genres', [GenreController::class,])->name('genres.index');
 });
+
+
+Route::get('/books', [BookController::class, 'index'])->name('books.index');
+Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+
+// 仮のルーティング
+Route::get('/ranking', [RankingController::class,])->name('ranking.index');
