@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class BookSeeder extends Seeder

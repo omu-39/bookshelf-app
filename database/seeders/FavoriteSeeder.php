@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Book;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class FavoriteSeeder extends Seeder
 {
@@ -16,7 +16,7 @@ class FavoriteSeeder extends Seeder
         $users = User::all();
         $books = Book::all();
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $randomBooks = $books->random(rand(3, 5));
 
             $user->favoriteBooks()->syncWithoutDetaching($randomBooks->pluck('id'));
