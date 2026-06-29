@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ReviewRequest;
+use App\Http\Requests\StoreReviewRequest;
+use App\Http\Requests\UpdateReviewRequest;
 use App\Models\Book;
 use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +15,7 @@ class ReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ReviewRequest $request, Book $book)
+    public function store(StoreReviewRequest $request, Book $book)
     {
         $validated = $request->validated();
 
@@ -39,7 +40,7 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ReviewRequest $request, Review $review): RedirectResponse
+    public function update(UpdateReviewRequest $request, Review $review): RedirectResponse
     {
         $this->authorize('update', $review);
 

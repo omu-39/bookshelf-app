@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Review;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
-class ReviewRequest extends FormRequest
+class StoreReviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -37,5 +39,18 @@ class ReviewRequest extends FormRequest
             'comment.string' => 'コメントは​文字列で​入力してください。​',
             'comment.max' => 'コメントは1000文字以下で入力してください。',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            $exists = Review::where('user_id', $this->user()->id)
+                ->where('book_id', $this->route('book')->id)
+                ->exists();
+
+            if ($exists) {
+                $validator->errors()->add('rating', 'この書籍には既にレビューしています。');
+            }
+        });
     }
 }
