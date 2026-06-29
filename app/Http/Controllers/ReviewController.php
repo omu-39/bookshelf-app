@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewRequest;
 use App\Models\Review;
-use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ReviewRequest $request)
     {
         //
     }
@@ -26,9 +26,9 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Review $review)
+    public function update(ReviewRequest $request, Review $review)
     {
-        //
+        $this->authorize('update', $review);
     }
 
     /**
@@ -36,6 +36,6 @@ class ReviewController extends Controller
      */
     public function destroy(Review $review)
     {
-        //
+        $this->authorize('update', $review);
     }
 }
