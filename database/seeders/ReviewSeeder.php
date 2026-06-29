@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Book;
 use App\Models\Review;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class ReviewSeeder extends Seeder
 {
@@ -25,7 +24,7 @@ class ReviewSeeder extends Seeder
                 Review::create([
                     'book_id' => $book->id,
                     'user_id' => $user->id,
-                    'star_rating' => rand(3, 5),
+                    'rating' => rand(3, 5),
                     'comment' => fake()->paragraph(),
                 ]);
             }

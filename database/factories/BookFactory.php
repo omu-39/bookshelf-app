@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Book;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Book>
+ * @extends Factory<Book>
  */
 class BookFactory extends Factory
 {
@@ -22,9 +23,9 @@ class BookFactory extends Factory
             'title' => fake()->sentence(3),
             'author' => fake()->name(),
             'isbn' => fake()->isbn13(),
-            'publication_date' => fake()->date(),
+            'published_date' => fake()->date(),
             'description' => fake()->optional(0.8)->paragraph(),
-            'image_url' =>fake()->imageUrl(),
+            'image_url' => fake()->imageUrl(),
         ];
     }
 }
