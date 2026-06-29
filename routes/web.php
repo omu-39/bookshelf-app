@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\GenreController;
+use App\Http\Controllers\ReviewController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,8 +25,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
 
     // 仮のルーティング
-    Route::get('/favorites', [FavoriteController::class,])->name('favorites.index');
-    Route::get('/genres', [GenreController::class,])->name('genres.index');
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/books/{book}/favorite', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
+    Route::get('/genres', [GenreController::class, 'index'])->name('genres.index');
+    Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/books/{book}/reviews/like', [ReviewController::class, 'like'])->name('reviews.like');
 });
 
 
@@ -30,4 +37,4 @@ Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 
 // 仮のルーティング
-Route::get('/ranking', [RankingController::class,])->name('ranking.index');
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');

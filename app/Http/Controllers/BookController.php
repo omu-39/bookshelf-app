@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Genre;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreBookRequest;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): view
     {
         $books = Book::paginate(10);
 
@@ -22,7 +25,7 @@ class BookController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         $genres = Genre::all();
 
@@ -32,15 +35,27 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBookRequest $request)
+    public function store(StoreBookRequest $request): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+
+        $book = Book::create([
+            'user_id' => Auth::id(),
+            'title' => $validated['title'],
+            'author' => $validated['author'],
+            'isbn' => $validated['isbn'],
+            'published_date' => $validated['published_date'],
+            'description' => $validated['description'],
+            'image_url' => $validated['image_url'],
+        ]);
+
+        return redirect()->route('books.show', compact('book'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show(Book $book): View
     {
         $genres = $book->genres;
 

@@ -34,6 +34,7 @@ return [
         'published_date' => '出版日',
         'image_url' => '画像URL',
         'genres' => 'ジャンル',
+        'genres.*' => 'ジャンル',
         'comment' => 'コメント',
         'per_page' => '1ページあたりの件数',
         'page' => 'ページ番号',
