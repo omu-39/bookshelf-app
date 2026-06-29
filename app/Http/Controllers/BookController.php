@@ -67,7 +67,7 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        //
+        $this->authorize('update', $book);
     }
 
     /**
@@ -75,7 +75,7 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        $this->authorize('update', $book);
     }
 
     /**
@@ -83,6 +83,6 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $this->authorize('delete', $book);
     }
 }
