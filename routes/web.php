@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/reviews/{review}/like', [ReviewController::class, 'like'])->name('reviews.like');
     Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
-    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.delete');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 
     // 仮のルーティング
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
