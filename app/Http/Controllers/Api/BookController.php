@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
+use App\Http\Requests\Api\V1\IndexBookRequest;
 class BookController extends Controller
+
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexBookRequest $request)
     {
         //
     }
@@ -18,7 +18,7 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(IndexBookRequest $request)
     {
         //
     }
