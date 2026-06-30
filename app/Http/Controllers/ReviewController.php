@@ -71,10 +71,9 @@ class ReviewController extends Controller
 
     public function like(Review $review): RedirectResponse
     {
-        $user = Auth::user();
         $book = $review->book;
 
-        $user->likedReviews()->toggle($review->id);
+        Auth::user()->likedReviews()->toggle($review->id);
 
         return redirect()->route('books.show', compact('book'));
     }
