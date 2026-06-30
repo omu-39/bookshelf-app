@@ -3,10 +3,10 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
-use Illuminate\Support\ServiceProvider;
-use Laravel\Fortify\Fortify;
-use Laravel\Fortify\Contracts\LogoutResponse;
 use App\Actions\Fortify\LogoutResponse as CustomLogoutResponse;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {

@@ -28,4 +28,9 @@ class Genre extends Model
     {
         return Genre::exists();
     }
+
+    public function books_count(): int
+    {
+        return $this->books()->count();
+    }
 }

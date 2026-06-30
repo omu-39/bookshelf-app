@@ -4,8 +4,6 @@ namespace App\Policies;
 
 use App\Models\Genre;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Validation\Rules\Exists;
 
 class GenrePolicy
 {
