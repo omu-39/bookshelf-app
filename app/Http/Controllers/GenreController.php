@@ -71,6 +71,8 @@ class GenreController extends Controller
      */
     public function destroy(Genre $genre)
     {
+        $this->authorize('delete', $genre);
+
         $genre->delete();
 
         return redirect()->back()->with('success', 'ジャンルを削除しました。');
