@@ -12,7 +12,7 @@ class RankingController extends Controller
      */
     public function index(): View
     {
-        $rankedBooks = Book::withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->limit(10)->get();
+        $rankedBooks = Book::withCount('reviews')->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->limit(10)->get();
 
         return view('ranking.index', compact('rankedBooks'));
     }
