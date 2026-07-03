@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Review;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Validator;
 
 class StoreReviewRequest extends FormRequest
@@ -45,7 +46,7 @@ class StoreReviewRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
-            $exists = Review::where('user_id', $this->user()->id)
+            $exists = Review::where('user_id', Auth::id())
                 ->where('book_id', $this->route('book')->id)
                 ->exists();
 
