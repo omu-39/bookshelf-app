@@ -42,17 +42,4 @@ class StoreReviewRequest extends FormRequest
             'comment.max' => 'コメントは1000文字以下で入力してください。',
         ];
     }
-
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(function (Validator $validator) {
-            $exists = Review::where('user_id', Auth::id())
-                ->where('book_id', $this->route('book')->id)
-                ->exists();
-
-            if ($exists) {
-                $validator->errors()->add('rating', 'この書籍には既にレビューしています。');
-            }
-        });
-    }
 }

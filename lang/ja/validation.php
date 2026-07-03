@@ -3,7 +3,7 @@
 // lang/ja/validation.php
 
 return [
-    'required' => ':attributeは必須です。',
+    'required' => ':attributeを入力してください。',
     'email' => ':attributeはメール形式で入力してください。',
     'confirmed' => 'パスワードと一致しません。',
     'min' => [
@@ -15,6 +15,5 @@ return [
         'name' => '名前',
         'email' => 'メールアドレス',
         'password' => 'パスワード',
-        'password_confirmation' => '確認用パスワード',
     ],
 ];
