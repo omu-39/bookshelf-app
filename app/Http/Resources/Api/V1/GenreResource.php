@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Api\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ReviewResource extends JsonResource
+class GenreResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,7 @@ class ReviewResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'book_id' => $this->book_id,
-            'user_id' => $this->user_id,
-            'rating' => $this->rating,
-            'comment' => $this->comment,
-            'created_at' => $this->created_at->format('Y/m/d'),
+            'name' => $this->name,
         ];
     }
 }

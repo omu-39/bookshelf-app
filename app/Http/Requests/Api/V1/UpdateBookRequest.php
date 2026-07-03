@@ -10,18 +10,26 @@ class UpdateBookRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function rules(): array
     {
         return [
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
-            'isbn' => ['required', 'digits:13', Rule::unique('books', 'isbn')->ignore($this->book)],
+            'isbn' => ['required', 'string', 'digits:13', Rule::unique('books', 'isbn')->ignore($this->book)],
             'published_date' => ['required', 'date'],
             'description' => ['nullable', 'string', 'max:512'],
             'image_url' => ['nullable', 'url'],
             'genres' => ['required', 'array'],
-            'genres.*' => ['exists:genres,id'],
+            'genres.*' => ['exists:genres,name'],
         ];
     }
 
@@ -38,6 +46,7 @@ class UpdateBookRequest extends FormRequest
             'author.string' => '著者名は​文字列で​入力してください。​',
             'author.max' => '著者名は255文字以下で入力してください。',
             'isbn.required' => 'ISBNは必須です。',
+            'isbn.string' => 'ISBNは文字列で入力してください。',
             'isbn.digits' => ' ISBNは13桁で入力してください。',
             'isbn.unique' => 'そのISBNは既に使用されています。',
             'published_date.required' => '出版日は​必須です。',
