@@ -66,7 +66,7 @@ class ReviewController extends Controller
 
         $review->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'レビューを削除しました。');
     }
 
     public function like(Review $review): RedirectResponse
