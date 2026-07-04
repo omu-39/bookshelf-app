@@ -17,15 +17,15 @@ class BookModelTest extends TestCase
     {
         $user = User::factory()->create();
         $anotherUser = User::factory()->create();
-        $genres = Genre::factory()->create(3);
-        $book = Book::factory()->for($user)->for($genres)->create();
+        $genre = Genre::factory()->create();
+        $book = Book::factory()->for($user)->create();
         $review = Review::factory()->for($anotherUser)->for($book)->create();
         $book->favoritedUsers()->attach($anotherUser);
-        $book->genres()->attach($genres);
+        $book->genres()->attach($genre);
 
         $this->assertTrue($book->user->is($user));
-        $this->assertTrue($book->genres->is($genres));
-        $this->assertTrue($book->reviews->is($review));
-        $this->assertTrue($book->favoritedUsers()->is($anotherUser));
+        $this->assertTrue($book->genres->contains($genre));
+        $this->assertTrue($book->reviews->contains($review));
+        $this->assertTrue($book->favoritedUsers->contains($anotherUser));
     }
 }
