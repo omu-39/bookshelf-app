@@ -13,7 +13,7 @@ class ReviewModelTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_example(): void
+    public function test_レビューのリレーションが定義されている(): void
     {
         $user = User::factory()->create();
         $likedUser = User::factory()->create();
