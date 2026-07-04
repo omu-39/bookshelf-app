@@ -23,9 +23,4 @@ class Genre extends Model
     {
         return $this->belongsToMany(Book::class);
     }
-
-    public function isEmpty(): bool
-    {
-        return Genre::exists();
-    }
 }
