@@ -86,7 +86,7 @@ class GenreControllerTest extends TestCase
         $book = Book::factory()->for($user)->create();
         $book->genres()->attach($genre);
 
-        $this->post(route('genres.destroy', $genre))
+        $this->actingAs($user)->delete(route('genres.destroy', $genre))
             ->assertSessionHas('error', 'この​ジャンルには​書籍が​紐付いている​ため削除できません。​');
 
         $this->assertDatabaseCount('genres', 1);
