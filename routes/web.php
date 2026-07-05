@@ -46,5 +46,4 @@ Route::middleware('auth')->group(function () {
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 
-// 仮のルーティング
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
