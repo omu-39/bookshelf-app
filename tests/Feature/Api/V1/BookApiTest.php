@@ -13,7 +13,7 @@ class BookApiTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_書籍一覧情報をJSON形式で取得できる(): void
+    public function test_書籍一覧情報を_jso_n形式で取得できる(): void
     {
         $genres = Genre::factory()->count(5)->create();
         $books = Book::factory()->count(10)->create();
@@ -27,10 +27,10 @@ class BookApiTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonStructure([
             'data' => [
-                '*' => ['id', 'user_id', 'title', 'author', 'image_url', 'genres', 'average_rating', 'reviews_count']
+                '*' => ['id', 'user_id', 'title', 'author', 'image_url', 'genres', 'average_rating', 'reviews_count'],
             ],
             'links' => ['first', 'last', 'prev', 'next'],
-            'meta' => ['current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total']
+            'meta' => ['current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'],
         ]);
     }
 
@@ -107,9 +107,9 @@ class BookApiTest extends TestCase
         $response->assertJsonPath('data.id', $book->id);
     }
 
-    public function test_存在しないIDは_404_のJSONを返す(): void
+    public function test_存在しない_i_dは_404_の_jso_nを返す(): void
     {
-        $response = $this->getJson("/api/v1/books/999");
+        $response = $this->getJson('/api/v1/books/999');
 
         $response->assertStatus(404);
         $response->assertExactJson(['error' => '書籍が見つかりませんでした。']);
@@ -121,14 +121,14 @@ class BookApiTest extends TestCase
         $genre = Genre::factory()->create();
 
         $payload = [
-            "user_id" => $user->id,
-            "title" => "Laravel",
-            "author" => "Taylor Otwell",
-            "isbn" => "1111111111111",
-            "published_date" => "2011-01-01",
-            "description" => "Webアプリケーション開発で広く使われている、非常に人気のあるPHPフレームワーク",
-            "image_url" => null,
-            "genres" => [$genre->name],
+            'user_id' => $user->id,
+            'title' => 'Laravel',
+            'author' => 'Taylor Otwell',
+            'isbn' => '1111111111111',
+            'published_date' => '2011-01-01',
+            'description' => 'Webアプリケーション開発で広く使われている、非常に人気のあるPHPフレームワーク',
+            'image_url' => null,
+            'genres' => [$genre->name],
         ];
 
         $response = $this->postJson('api/v1/books', $payload);
@@ -144,9 +144,9 @@ class BookApiTest extends TestCase
     public function test_不正な入力は_422_を返す(): void
     {
         $payload = [
-            "title" => "",
-            "description" => "Webアプリケーション開発で広く使われている、非常に人気のあるPHPフレームワーク",
-            "image_url" => null,
+            'title' => '',
+            'description' => 'Webアプリケーション開発で広く使われている、非常に人気のあるPHPフレームワーク',
+            'image_url' => null,
         ];
 
         $response = $this->postJson('/api/v1/books', $payload);
@@ -162,14 +162,14 @@ class BookApiTest extends TestCase
         $book = Book::factory()->for($user)->create(['title' => '更新前']);
 
         $payload = [
-            "user_id" => $user->id,
-            "title" => "更新後",
-            "author" => "user",
-            "isbn" => "1111111111111",
-            "published_date" => "2011-01-01",
-            "description" => "updated",
-            "image_url" => null,
-            "genres" => [$genre->name],
+            'user_id' => $user->id,
+            'title' => '更新後',
+            'author' => 'user',
+            'isbn' => '1111111111111',
+            'published_date' => '2011-01-01',
+            'description' => 'updated',
+            'image_url' => null,
+            'genres' => [$genre->name],
         ];
 
         $response = $this->putJson("/api/v1/books/{$book->id}", $payload);

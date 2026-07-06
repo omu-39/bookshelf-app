@@ -53,7 +53,7 @@ class ReviewControllerTest extends TestCase
         $this->assertDatabaseHas('reviews', [
             'user_id' => $user->id,
             'book_id' => $book->id,
-            'comment' => '更新後コメント'
+            'comment' => '更新後コメント',
         ]);
     }
 

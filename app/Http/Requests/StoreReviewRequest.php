@@ -2,11 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Review;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Validator;
 
 class StoreReviewRequest extends FormRequest
 {

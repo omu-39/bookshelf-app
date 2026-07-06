@@ -5,9 +5,7 @@ namespace Tests\Feature;
 use App\Models\Book;
 use App\Models\Genre;
 use App\Models\User;
-use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class BookControllerTest extends TestCase
@@ -162,7 +160,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseCount('books', 0);
     }
 
-    public function test_ISBNは重複して登録できない(): void
+    public function test_isb_nは重複して登録できない(): void
     {
         $user = User::factory()->create();
         Book::factory()->create(['isbn' => '9781234567897']);

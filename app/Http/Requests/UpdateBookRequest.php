@@ -26,7 +26,7 @@ class UpdateBookRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
-            'isbn' => ['required','string', 'digits:13', Rule::unique('books', 'isbn')->ignore($this->book)],
+            'isbn' => ['required', 'string', 'digits:13', Rule::unique('books', 'isbn')->ignore($this->book)],
             'published_date' => ['required', 'date'],
             'description' => ['nullable', 'string'],
             'image_url' => ['nullable', 'url'],
