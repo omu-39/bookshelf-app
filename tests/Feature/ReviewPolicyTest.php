@@ -4,11 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class BookPolicyTest extends TestCase
+class ReviewPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -19,38 +20,41 @@ class BookPolicyTest extends TestCase
         $genre = Genre::factory()->create();
         $book = Book::factory()->for($owner)->create();
         $book->genres()->attach($genre);
+        $review = Review::factory()->for($owner)->for($book)->create();
 
-        $this->assertTrue($owner->can('update', $book));
-        $this->assertTrue($owner->can('delete', $book));
-        $this->assertFalse($other->can('update', $book));
-        $this->assertFalse($other->can('delete', $book));
+        $this->assertTrue($owner->can('update', $review));
+        $this->assertTrue($owner->can('delete', $review));
+        $this->assertFalse($other->can('update', $review));
+        $this->assertFalse($other->can('delete', $review));
     }
 
-    public function test_他人は書籍の編集画面を開けない(): void
+    public function test_他人はレビューの編集画面を開けない(): void
     {
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $genre = Genre::factory()->create();
         $book = Book::factory()->for($owner)->create();
         $book->genres()->attach($genre);
+        $review = Review::factory()->for($owner)->for($book)->create();
 
         $this->actingAs($other)
-            ->get(route('books.edit', $book))
+            ->get(route('reviews.edit', $review))
             ->assertForbidden();
     }
 
-    public function test_他人は書籍を削除できない(): void
+    public function test_他人はレビューを削除できない(): void
     {
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $genre = Genre::factory()->create();
         $book = Book::factory()->for($owner)->create();
         $book->genres()->attach($genre);
+        $review = Review::factory()->for($owner)->for($book)->create();
 
         $this->actingAs($other)
-            ->delete(route('books.destroy', $book))
+            ->delete(route('reviews.destroy', $review))
             ->assertForbidden();
 
-        $this->assertDatabaseHas('books', ['id' => $book->id]);
+        $this->assertDatabaseHas('reviews', ['id' => $review->id]);
     }
 }
