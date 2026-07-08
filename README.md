@@ -126,6 +126,7 @@ password:password
 
 ### 提供する機能
 - 書籍データの取得
+- 書籍一覧取得時の絞込機能
 - 書籍登録
 - 書籍更新
 - 書籍削除
@@ -136,5 +137,16 @@ password:password
 - `http://localhost/api/v1/books` : 書籍作成（POST）
 - `http://localhost/api/v1/books/{book}` : 書籍更新（PUT/PATCH）
 - `http://localhost/api/v1/books/{book}` : 書籍削除（DELETE）
+
+### 一覧取得時の絞込機能
+書籍一覧取得では、クエリパラメータを付けることで検索結果を絞り込めます。
+
+- `keyword` : タイトルに対して部分一致検索を行います。
+  - 例: `http://localhost/api/v1/books?keyword=Laravel`
+- `genres` : ジャンル名の配列で絞り込みます。
+  - 例: `http://localhost/api/v1/books?genres[]=PHP&genres[]=Web`
+- `page` : 取得するページ番号を指定します。
+- `per_page` : 1ページあたりの表示件数を指定します。
+  - 例: `http://localhost/api/v1/books?per_page=10`
 
 ※ `{book}` には実際の ID を入れて使用します。
