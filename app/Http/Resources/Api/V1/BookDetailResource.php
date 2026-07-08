@@ -16,7 +16,7 @@ class BookDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'user' => $this->user->name,
             'title' => $this->title,
             'author' => $this->author,
             'isbn' => $this->isbn,
@@ -25,8 +25,6 @@ class BookDetailResource extends JsonResource
             'image_url' => $this->image_url,
             'genres' => GenreResource::collection($this->whenLoaded('genres')),
             'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
-            'average_rating' => round($this->reviews_avg_rating ?? 0, 1),
-            'reviews_count' => (int) ($this->reviews_count ?? 0),
         ];
     }
 }
