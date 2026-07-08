@@ -149,4 +149,176 @@ password:password
 - `per_page` : 1ページあたりの表示件数を指定します。
   - 例: `http://localhost/api/v1/books?per_page=10`
 
+### 各APIのリクエスト例・レスポンス例
+
+#### 1. 書籍一覧取得
+- Method: `GET`
+- Endpoint: `http://localhost/api/v1/books`
+- Request example:
+  - `http://localhost/api/v1/books?keyword=Laravel&per_page=5`
+- Response JSON example:
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "user": "山田太郎",
+      "title": "Laravel入門",
+      "author": "山田太郎",
+      "image_url": "https://example.com/image.jpg",
+      "genres": [
+        {
+          "id": 1,
+          "name": "PHP"
+        }
+      ],
+      "average_rating": 4.5,
+      "reviews_count": 3
+    }
+  ],
+  "links": {
+    "first": "http://localhost/api/v1/books?page=1",
+    "last": "http://localhost/api/v1/books?page=2",
+    "prev": null,
+    "next": "http://localhost/api/v1/books?page=2"
+  },
+  "meta": {
+    "current_page": 1,
+    "from": 1,
+    "last_page": 2,
+    "path": "http://localhost/api/v1/books",
+    "per_page": 5,
+    "to": 5,
+    "total": 11
+  }
+}
+```
+
+#### 2. 書籍詳細取得
+- Method: `GET`
+- Endpoint: `http://localhost/api/v1/books/{book}`
+- Response JSON example:
+```json
+{
+  "data": {
+    "id": 1,
+    "user": "山田太郎",
+    "title": "Laravel入門",
+    "author": "山田太郎",
+    "isbn": "9781234567890",
+    "published_date": "2024-01-01",
+    "description": "Laravelの基礎を学べる書籍です。",
+    "image_url": "https://example.com/image.jpg",
+    "genres": [
+      {
+        "id": 1,
+        "name": "PHP"
+      }
+    ],
+    "reviews": [
+      {
+        "id": 1,
+        "user": "佐藤花子",
+        "rating": 5,
+        "comment": "とても勉強になりました。",
+        "created_at" :"2026-05-04"
+      }
+    ],
+  }
+}
+```
+
+#### 3. 書籍作成
+- Method: `POST`
+- Endpoint: `http://localhost/api/v1/books`
+- Request body example:
+```json
+{
+  "user_id": 1,
+  "title": "Laravel実践",
+  "author": "佐藤花子",
+  "isbn": "9789876543210",
+  "published_date": "2024-06-01",
+  "description": "実務向けのLaravel解説書です。",
+  "image_url": "https://example.com/image.jpg",
+  "genres": ["PHP", "Web"]
+}
+```
+- Response JSON example:
+```json
+{
+  "data": {
+    "id": 12,
+    "user": "山田太郎",
+    "title": "Laravel実践",
+    "author": "佐藤花子",
+    "isbn": "9789876543210",
+    "published_date": "2024-06-01",
+    "description": "実務向けのLaravel解説書です。",
+    "image_url": "https://example.com/image.jpg",
+    "genres": [
+      {
+        "id": 1,
+        "name": "PHP"
+      },
+      {
+        "id": 2,
+        "name": "Web"
+      }
+    ],
+    "reviews": [],
+  }
+}
+```
+
+#### 4. 書籍更新
+- Method: `PUT` or `PATCH`
+- Endpoint: `http://localhost/api/v1/books/{book}`
+- Request body example:
+```json
+{
+  "user_id": 1,
+  "title": "Laravel実践改訂版",
+  "author": "佐藤花子",
+  "isbn": "9789876543211",
+  "published_date": "2024-06-02",
+  "description": "改訂版です。",
+  "image_url": "https://example.com/image2.jpg",
+  "genres": ["PHP", "Web"]
+}
+```
+- Response JSON example:
+```json
+{
+  "data": {
+    "id": 12,
+    "user": "山田太郎",
+    "title": "Laravel実践改訂版",
+    "author": "佐藤花子",
+    "isbn": "9789876543211",
+    "published_date": "2024-06-02",
+    "description": "改訂版です。",
+    "image_url": "https://example.com/image2.jpg",
+    "genres": [
+      {
+        "id": 1,
+        "name": "PHP"
+      },
+      {
+        "id": 2,
+        "name": "Web"
+      }
+    ],
+    "reviews": [],
+  }
+}
+```
+
+#### 5. 書籍削除
+- Method: `DELETE`
+- Endpoint: `http://localhost/api/v1/books/{book}`
+- Response:
+  - Status: `204 No Content`
+  - Body: none
+
 ※ `{book}` には実際の ID を入れて使用します。
