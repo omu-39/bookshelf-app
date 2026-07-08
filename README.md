@@ -266,7 +266,6 @@ password:password
         "name": "Web"
       }
     ],
-    "reviews": [],
   }
 }
 ```
@@ -309,7 +308,6 @@ password:password
         "name": "Web"
       }
     ],
-    "reviews": [],
   }
 }
 ```
