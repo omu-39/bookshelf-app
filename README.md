@@ -38,57 +38,83 @@ COACHTECH 模擬案件にて作成した成果物です。(バックエンド部
 
 ### 1. リポジトリをクローン
 
+```bash
 git clone https://github.com/omu-39/bookshelf-app.git
+```
 
 ### 2. ディレクトリ移動
 
+```bash
 cd bookshelf-app-git
+```
 
 ### 3. Sailを含む依存パッケージのインストール
 
+```bash
 docker run --rm \
- -u "$(id -u):$(id -g)" \
- -v "$(pwd):/var/www/html" \
- -w /var/www/html \
- -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
- laravelsail/php82-composer:latest \
- composer install
+  -u "$(id -u):$(id -g)" \
+  -v "$(pwd):/var/www/html" \
+  -w /var/www/html \
+  -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
+  laravelsail/php82-composer:latest \
+  composer install
+```
 
 ### 4. 環境変数を設定
 
+```bash
 cp .env.example .env
+```
 
 ### 5. Sailの起動
 
+```bash
 ./vendor/bin/sail up -d
+```
 
 ### 6. アプリケーションキーの生成
 
+```bash
 ./vendor/bin/sail artisan key:generate
+```
 
 ### 7. DBのセットアップ
 
+```bash
 ./vendor/bin/sail artisan migrate --seed
+```
 
 ### 8. NPM依存パッケージのインストール
 
+```bash
 ./vendor/bin/sail npm install
+```
 
 ### 9. Alpine.jsのインストール
 
+```bash
 ./vendor/bin/sail npm install alpinejs
+```
 
 ### 10. Tailwind CSSのインストール
 
+```bash
 ./vendor/bin/sail npm install
+```
 
 ### 11. CSS/JSのビルド
 
 - 本番用
-  ./vendor/bin/sail npm run build
+
+```bash
+./vendor/bin/sail npm run build
+```
 
 - 開発用
-  ./vendor/bin/sail npm run dev
+
+```bash
+./vendor/bin/sail npm run dev
+```
 
 ## ER図
 
@@ -364,8 +390,8 @@ password:password
 - Method: `DELETE`
 - Endpoint: `http://localhost/api/v1/books/{book}`
 - Response:
-    - Status: `204 No Content`
-    - Body: none
+- Status: `204 No Content`
+- Body: none
 
 ※ `{book}` には実際の ID を入れて使用します。
 
