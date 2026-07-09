@@ -27,7 +27,7 @@ class IndexBookRequest extends FormRequest
             'genres' => ['nullable', 'array'],
             'genres.*' => ['string', 'exists:genres,name'],
             'page' => ['nullable', 'integer', 'min:1'],
-            'per_page' => ['nullable', 'integer', 'between:1,100'],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];
     }
 
@@ -41,7 +41,8 @@ class IndexBookRequest extends FormRequest
             'page.integer' => 'ページ​番号が​正しく​ありません。',
             'page.min' => 'ページ番号は1以上の数値を指定してください。',
             'per_page.integer' => '表示件数の​指定が​正しく​ありません。',
-            'per_page.between' => '表示件数は1〜100件の間で指定してください。',
+            'per_page.min' => '表示件数は1以上の数値を指定してください。',
+            'per_page.max' => '表示件数は1以上100以下の数値を指定してください。',
         ];
     }
 }
