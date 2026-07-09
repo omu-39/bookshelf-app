@@ -160,7 +160,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseCount('books', 0);
     }
 
-    public function test_isb_nは重複して登録できない(): void
+    public function test_isbn_は重複して登録できない(): void
     {
         $user = User::factory()->create();
         Book::factory()->create(['isbn' => '9781234567897']);

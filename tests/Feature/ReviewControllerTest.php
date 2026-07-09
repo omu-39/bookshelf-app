@@ -65,7 +65,24 @@ class ReviewControllerTest extends TestCase
         $book->genres()->attach($genre);
         $review = Review::factory()->for($user)->for($book)->create();
 
-        $this->actingAs($user)->delete(route('reviews.destroy', $review));
+        $this->actingAs($user)->delete(route('reviews.destroy', $review))
+            ->assertRedirect(route('books.show', $book));
+
+        $this->assertDatabaseCount('reviews', 0);
+    }
+
+    public function test_書籍が削除されたら紐づくレビューも削除される(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+        $book = Book::Factory()->for($user)->create();
+        $book->genres()->attach($genre);
+        Review::factory()->for($book)->create();
+
+        $this->assertDatabaseCount('reviews', 1);
+
+        $this->actingAs($user)->delete(route('books.destroy', $book))
+            ->assertRedirect(route('books.index'));
 
         $this->assertDatabaseCount('reviews', 0);
     }

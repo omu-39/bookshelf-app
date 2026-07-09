@@ -66,9 +66,11 @@ class ReviewController extends Controller
     {
         $this->authorize('update', $review);
 
+        $book = $review->book;
+
         $review->delete();
 
-        return redirect()->back()->with('success', 'レビューを削除しました。');
+        return redirect()->route('books.show', compact('book'))->with('success', 'レビューを削除しました。');
     }
 
     public function like(Review $review): RedirectResponse
