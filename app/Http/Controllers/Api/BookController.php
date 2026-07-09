@@ -17,7 +17,7 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(IndexBookRequest $request): AnonymousResourceCollection
+    public function index(IndexBookRequest $request)
     {
         $query = Book::with(['genres', 'reviews'])->withCount('reviews')->withAvg('reviews', 'rating');
 
@@ -36,7 +36,15 @@ class BookController extends Controller
         $perPage = (int) $request->input('per_page', 20);
         $books = $query->paginate($perPage);
 
-        return BookResource::collection($books);
+        return response()->json([
+            'data' => BookResource::collection($books)->resolve(),
+            'meta' =>[
+                'current_page' => $books->currentPage(),
+                'last_page' => $books->lastPage(),
+                'per_page' => $books->perPage(),
+                'total' => $books->total(),
+            ]
+        ]);
     }
 
     /**
