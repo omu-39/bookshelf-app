@@ -25,7 +25,7 @@ class ReviewSeeder extends Seeder
                     'book_id' => $book->id,
                     'user_id' => $user->id,
                     'rating' => rand(3, 5),
-                    'comment' => fake()->paragraph(),
+                    'comment' => fake()->realText(rand(50, 100)),
                 ]);
             }
         }
