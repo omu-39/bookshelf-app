@@ -13,7 +13,7 @@ class BookApiTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_書籍一覧情報を_jso_n形式で取得できる(): void
+    public function test_書籍一覧情報を_json_形式で取得できる(): void
     {
         $genres = Genre::factory()->count(5)->create();
         $books = Book::factory()->count(10)->create();
