@@ -10,14 +10,19 @@ use App\Http\Resources\Api\V1\BookDetailResource;
 use App\Http\Resources\Api\V1\BookResource;
 use App\Models\Book;
 use App\Models\Genre;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class BookController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 書籍一覧を取得する API エンドポイント。
+     * キーワード検索、ジャンル絞り込み、ページネーションに対応。
+     *
+     * @param IndexBookRequest $request バリデーション済みの検索条件リクエスト
+     * @return JsonResponse 書籍一覧とメタ情報を含む JSON レスポンス
      */
-    public function index(IndexBookRequest $request): AnonymousResourceCollection
+    public function index(IndexBookRequest $request): JsonResponse
     {
         $query = Book::with(['genres', 'reviews'])->withCount('reviews')->withAvg('reviews', 'rating');
 
@@ -36,13 +41,25 @@ class BookController extends Controller
         $perPage = (int) $request->input('per_page', 20);
         $books = $query->paginate($perPage);
 
-        return BookResource::collection($books);
+        return response()->json([
+            'data' => BookResource::collection($books)->resolve(),
+            'meta' =>[
+                'current_page' => $books->currentPage(),
+                'last_page' => $books->lastPage(),
+                'per_page' => $books->perPage(),
+                'total' => $books->total(),
+            ]
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 書籍を登録する API エンドポイント。
+     * Bookモデルを作成し、ジャンルを同期させてから BookDetailResource を返す。
+     *
+     * @param StoreBookRequest $request 書籍登録用のバリデーション済みリクエスト
+     * @return JsonResponse 作成された書籍の詳細情報 (201 Created)
      */
-    public function store(StoreBookRequest $request)
+    public function store(StoreBookRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -58,6 +75,7 @@ class BookController extends Controller
 
         $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
         $book->genres()->sync($genreIds);
+        $book->load(['genres']);
 
         return (new BookDetailResource($book))
             ->response()
@@ -65,21 +83,29 @@ class BookController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 書籍詳細情報を取得する API エンドポイント。
+     * 紐づくジャンルとレビューを読み込んで BookDetailResource を返す。
+     *
+     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @return BookDetailResource 書籍の詳細情報
      */
-    public function show(Book $book)
+    public function show(Book $book): BookDetailResource
     {
         $book->load(['genres', 'reviews']);
-        $book->loadAvg('reviews', 'rating');
-        $book->loadCount('reviews');
 
         return new BookDetailResource($book);
     }
 
     /**
-     * Update the specified resource in storage.
+     * 書籍を更新する API エンドポイント。
+     * 入力値で Book を更新し、ジャンルを同期したうえで
+     * 更新後の書籍情報を BookDetailResource として返す。
+     *
+     * @param UpdateBookRequest $request 書籍更新用のバリデーション済みリクエスト
+     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @return BookDetailResource 更新された書籍の詳細情報
      */
-    public function update(UpdateBookRequest $request, Book $book)
+    public function update(UpdateBookRequest $request, Book $book): BookDetailResource
     {
         $validated = $request->validated();
 
@@ -95,14 +121,18 @@ class BookController extends Controller
 
         $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
         $book->genres()->sync($genreIds);
+        $book->load(['genres']);
 
         return new BookDetailResource($book);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 書籍を削除する API エンドポイント。
+     *
+     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @return JsonResponse 削除成功時は 204 No Content を返す
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book): JsonResponse
     {
         $book->delete();
 

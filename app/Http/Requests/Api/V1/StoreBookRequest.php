@@ -37,7 +37,7 @@ class StoreBookRequest extends FormRequest
         return [
             'user_id.required' => 'ユーザーIDは必須です。',
             'user_id.integer' => 'ユーザーIDの形式が正しくありません。',
-            'user_id.exists' => '指定された​ユーザーは​見つかりません。',
+            'user_id.exists' => '指定された​登録者は​存在しません。​',
             'title.required' => 'タイトルは必須です。',
             'title.string' => 'タイトルは​文字列で​入力してください。',
             'title.max' => 'タイトルは255文字以下で入力してください。',
