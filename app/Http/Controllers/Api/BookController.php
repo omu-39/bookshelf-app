@@ -66,6 +66,7 @@ class BookController extends Controller
 
         $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
         $book->genres()->sync($genreIds);
+        $book->load(['genres']);
 
         return (new BookDetailResource($book))
             ->response()
@@ -103,6 +104,7 @@ class BookController extends Controller
 
         $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
         $book->genres()->sync($genreIds);
+        $book->load(['genres']);
 
         return new BookDetailResource($book);
     }
