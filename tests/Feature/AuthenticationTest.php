@@ -10,6 +10,97 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_会員登録画面を表示できる(): void
+    {
+        $this->get(route('register'))->assertOk();
+    }
+
+    public function test_正しい情報で会員登録ができる(): void
+    {
+        $response = $this->post(route('register'), [
+            'name' => 'Test User',
+            'email' => 'example@gmail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertRedirect(route('books.index'));
+        $this->assertDatabaseHas('users', [
+            'name' => 'Test User',
+            'email' => 'example@gmail.com',
+        ]);
+    }
+
+        public function test_会員登録時_名前が空だとバリデーションエラーになる(): void
+    {
+        $response = $this->post(route('register'), [
+            'name' => '',
+            'email' => 'example@gmail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertSessionHasErrors(['name' => 'お名前を入力してください。']);
+        $this->assertGuest();
+    }
+
+    public function test_会員登録時_emailが空だとバリデーションエラーになる(): void
+    {
+        $response = $this->post(route('register'), [
+            'name' => 'Test User',
+            'email' => '',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertSessionHasErrors(['email' => 'メールアドレスを入力してください。']);
+        $this->assertGuest();
+    }
+
+    public function test_会員登録時_emailが不正な形式だとバリデーションエラーになる(): void
+    {
+        $response = $this->post(route('register'), [
+            'name' => 'Test User',
+            'email' => 'invalid-email',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertSessionHasErrors(['email' => 'メールアドレスはメール形式で入力してください。']);
+        $this->assertGuest();
+    }
+
+    public function test_会員登録時_passwordが空だとバリデーションエラーになる(): void
+    {
+        $response = $this->post(route('register'), [
+            'name' => 'Test User',
+            'email' => 'example@gmail.com',
+            'password' => '',
+            'password_confirmation' => '',
+        ]);
+
+        $response->assertSessionHasErrors(['password' => 'パスワードを入力してください。']);
+        $this->assertGuest();
+    }
+
+    public function test_会員登録時_passwordが8文字未満だとバリデーションエラーになる(): void
+    {
+        $response = $this->post(route('register'), [
+            'name' => 'Test User',
+            'email' => 'example@gmail.com',
+            'password' => 'short',
+            'password_confirmation' => 'short',
+        ]);
+
+        $response->assertSessionHasErrors(['password' => 'パスワードは8文字以上で入力してください。']);
+        $this->assertGuest();
+    }
+
+    public function test_会員登録時_passwordとpassword_confirmationが一致しないとバリデーションエラーになる(): void
+    {
+
+    }
+
     public function test_ログイン画面を表示できる(): void
     {
         $this->get(route('login'))->assertOk();
@@ -37,7 +128,7 @@ class AuthenticationTest extends TestCase
             'password' => 'wrongPassword',
         ]);
 
-        $response->assertSessionHasErrors('email');
+        $response->assertSessionHasErrors(['email' => 'ログイン情報が登録されていません。']);
         $this->assertGuest();
     }
 
@@ -48,7 +139,7 @@ class AuthenticationTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertSessionHasErrors('email');
+        $response->assertSessionHasErrors(['email' => 'ログイン情報が登録されていません。']);
         $this->assertGuest();
     }
 
@@ -59,7 +150,7 @@ class AuthenticationTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertSessionHasErrors('email');
+        $response->assertSessionHasErrors(['email' => 'メールアドレスを入力してください。']);
     }
 
     public function test_パスワードが空だとバリデーションエラーになる(): void
@@ -71,7 +162,7 @@ class AuthenticationTest extends TestCase
             'password' => '',
         ]);
 
-        $response->assertSessionHasErrors('password');
+        $response->assertSessionHasErrors(['password' => 'パスワードを入力してください。']);
     }
 
     public function test_ログアウトできる(): void
