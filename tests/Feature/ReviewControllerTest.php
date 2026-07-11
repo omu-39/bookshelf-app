@@ -109,24 +109,94 @@ class ReviewControllerTest extends TestCase
         $genre = Genre::factory()->create();
         $book = Book::Factory()->create();
         $book->genres()->attach($genre);
-        $content = ['rating' => 4, 'comment' => 'test'];
+        $reviewContent = ['rating' => 4, 'comment' => 'test'];
 
-        $this->post(route('reviews.store', $book), $content)
+        $this->post(route('reviews.store', $book), $reviewContent)
             ->assertRedirect(route('login'));
 
         $this->assertDatabaseCount('reviews', 0);
     }
 
-    public function test_未評価でレビューを投稿できない(): void
+    public function test_未評価だとバリデーションエラーになる(): void
     {
         $user = User::factory()->create();
         $genre = Genre::factory()->create();
         $book = Book::Factory()->create();
         $book->genres()->attach($genre);
-        $content = ['comment' => 'test'];
+        $reviewContent = ['rating' => null, 'comment' => 'test'];
 
-        $this->actingAs($user)->post(route('reviews.store', $book), $content)
+        $this->actingAs($user)->post(route('reviews.store', $book), $reviewContent)
             ->assertSessionHasErrors('rating');
+
+        $this->assertDatabaseCount('reviews', 0);
+    }
+
+    public function test_評価が数値でないとバリデーションエラーになる(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+        $book = Book::Factory()->create();
+        $book->genres()->attach($genre);
+        $reviewContent = ['rating' => 'string', 'comment' => 'test'];
+
+        $this->actingAs($user)->post(route('reviews.store', $book), $reviewContent)
+            ->assertSessionHasErrors('rating');
+
+        $this->assertDatabaseCount('reviews', 0);
+    }
+
+    public function test_評価が1～5の整数でないとバリデーションエラーになる(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+        $book = Book::Factory()->create();
+        $book->genres()->attach($genre);
+        $reviewContent = ['rating' => '6', 'comment' => 'test'];
+
+        $this->actingAs($user)->post(route('reviews.store', $book), $reviewContent)
+            ->assertSessionHasErrors('rating');
+
+        $this->assertDatabaseCount('reviews', 0);
+    }
+
+    public function test_コメントが空だとバリデーションエラーになる(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+        $book = Book::Factory()->create();
+        $book->genres()->attach($genre);
+        $reviewContent = ['rating' => '5', 'comment' => null];
+
+        $this->actingAs($user)->post(route('reviews.store', $book), $reviewContent)
+            ->assertSessionHasErrors('comment');
+
+        $this->assertDatabaseCount('reviews', 0);
+    }
+
+    public function test_コメントが文字列でないとバリデーションエラーになる(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+        $book = Book::Factory()->create();
+        $book->genres()->attach($genre);
+        $reviewContent = ['rating' => '5', 'comment' => 1234];
+
+        $this->actingAs($user)->post(route('reviews.store', $book), $reviewContent)
+            ->assertSessionHasErrors('comment');
+
+        $this->assertDatabaseCount('reviews', 0);
+    }
+
+    public function test_コメントが1001文字以上だとバリデーションエラーになる(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+        $book = Book::Factory()->create();
+        $book->genres()->attach($genre);
+        $reviewContent = ['rating' => '5', 'comment' => str_repeat('あ', 1001)];
+
+        $this->actingAs($user)->post(route('reviews.store', $book), $reviewContent)
+            ->assertSessionHasErrors('comment');
 
         $this->assertDatabaseCount('reviews', 0);
     }
