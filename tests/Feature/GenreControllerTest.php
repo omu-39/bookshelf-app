@@ -68,17 +68,6 @@ class GenreControllerTest extends TestCase
         $this->assertDatabaseCount('genres', 0);
     }
 
-    public function test_ジャンル名は重複できない(): void
-    {
-        $user = User::factory()->create();
-        Genre::factory()->create(['name' => 'ジャンル']);
-
-        $this->actingAs($user)->post(route('genres.store', ['name' => 'ジャンル']))
-            ->assertSessionHasErrors('name');
-
-        $this->assertDatabaseCount('genres', 1);
-    }
-
     public function test_書籍が紐づいているジャンルは削除できない(): void
     {
         $user = User::factory()->create();
@@ -88,6 +77,40 @@ class GenreControllerTest extends TestCase
 
         $this->actingAs($user)->delete(route('genres.destroy', $genre))
             ->assertSessionHas('error', 'この​ジャンルには​書籍が​紐付いている​ため削除できません。​');
+
+        $this->assertDatabaseCount('genres', 1);
+    }
+
+    public function test_ジャンル名が体とバリデーションエラーになる(): void
+    {
+        $user = User::factory()->create();
+        $genreContent = ['name' => null];
+
+        $this->actingAs($user)->post(route('genres.store'), $genreContent)
+            ->assertSessionHasErrors('name');
+
+        $this->assertDatabaseCount('genres', 0);
+    }
+
+    public function test_ジャンル名が文字列でないとバリデーションエラーになる(): void
+    {
+        $user = User::factory()->create();
+        $genreContent = ['name' => 1234];
+
+        $this->actingAs($user)->post(route('genres.store'), $genreContent)
+            ->assertSessionHasErrors('name');
+
+        $this->assertDatabaseCount('genres', 0);
+    }
+
+    public function test_ジャンル名は重複できない(): void
+    {
+        $user = User::factory()->create();
+        Genre::factory()->create(['name' => 'ジャンル']);
+        $genreContent = ['name' => 'ジャンル'];
+
+        $this->actingAs($user)->post(route('genres.store'), $genreContent)
+            ->assertSessionHasErrors('name');
 
         $this->assertDatabaseCount('genres', 1);
     }
