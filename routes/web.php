@@ -47,3 +47,7 @@ Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
+
+// 仮のルーティング
+Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+Route::get('/reading-plans', [ReadingPlanController::class, 'index'])->name('reading-plans.index');

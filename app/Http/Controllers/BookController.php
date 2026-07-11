@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IndexBookRequest;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
@@ -13,9 +14,13 @@ use Illuminate\View\View;
 class BookController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 書籍一覧画面の表示
+     * キーワード、ジャンル、並び順でフィルタリングできる
+     *
+     * @param Request $request 検索条件
+     * @return View 一覧画面
      */
-    public function index(): View
+    public function index(IndexBookRequest $request): View
     {
         $books = Book::with('genres')->paginate(10);
 
