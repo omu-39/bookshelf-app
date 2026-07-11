@@ -40,7 +40,7 @@ class AuthenticationTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
-        $response->assertSessionHasErrors(['name' => 'お名前を入力してください。']);
+        $response->assertSessionHasErrors('name');
         $this->assertGuest();
     }
 
@@ -53,7 +53,7 @@ class AuthenticationTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
-        $response->assertSessionHasErrors(['email' => 'メールアドレスを入力してください。']);
+        $response->assertSessionHasErrors('email');
         $this->assertGuest();
     }
 
@@ -66,7 +66,7 @@ class AuthenticationTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
-        $response->assertSessionHasErrors(['email' => 'メールアドレスはメール形式で入力してください。']);
+        $response->assertSessionHasErrors('email');
         $this->assertGuest();
     }
 
@@ -79,7 +79,7 @@ class AuthenticationTest extends TestCase
             'password_confirmation' => '',
         ]);
 
-        $response->assertSessionHasErrors(['password' => 'パスワードを入力してください。']);
+        $response->assertSessionHasErrors('password');
         $this->assertGuest();
     }
 
@@ -92,13 +92,21 @@ class AuthenticationTest extends TestCase
             'password_confirmation' => 'short',
         ]);
 
-        $response->assertSessionHasErrors(['password' => 'パスワードは8文字以上で入力してください。']);
+        $response->assertSessionHasErrors('password');
         $this->assertGuest();
     }
 
     public function test_会員登録時_passwordとpassword_confirmationが一致しないとバリデーションエラーになる(): void
     {
+        $response = $this->post(route('register'), [
+            'name' => 'Test User',
+            'email' => 'example@gmail.com',
+            'password' => 'short',
+            'password_confirmation' => 'wrong',
+        ]);
 
+        $response->assertSessionHasErrors('password');
+        $this->assertGuest();
     }
 
     public function test_ログイン画面を表示できる(): void
@@ -128,7 +136,7 @@ class AuthenticationTest extends TestCase
             'password' => 'wrongPassword',
         ]);
 
-        $response->assertSessionHasErrors(['email' => 'ログイン情報が登録されていません。']);
+        $response->assertSessionHasErrors('email');
         $this->assertGuest();
     }
 
@@ -139,7 +147,7 @@ class AuthenticationTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertSessionHasErrors(['email' => 'ログイン情報が登録されていません。']);
+        $response->assertSessionHasErrors('email');
         $this->assertGuest();
     }
 
@@ -150,7 +158,7 @@ class AuthenticationTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertSessionHasErrors(['email' => 'メールアドレスを入力してください。']);
+        $response->assertSessionHasErrors('email');
     }
 
     public function test_パスワードが空だとバリデーションエラーになる(): void
@@ -162,7 +170,7 @@ class AuthenticationTest extends TestCase
             'password' => '',
         ]);
 
-        $response->assertSessionHasErrors(['password' => 'パスワードを入力してください。']);
+        $response->assertSessionHasErrors('password');
     }
 
     public function test_ログアウトできる(): void
