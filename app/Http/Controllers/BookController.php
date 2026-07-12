@@ -22,7 +22,45 @@ class BookController extends Controller
      */
     public function index(IndexBookRequest $request): View
     {
-        $books = Book::with('genres')->paginate(10);
+        $query = Book::with('genres');
+
+        // keyword
+        if ($request->filled('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', "%{$keyword}%")
+                ->orWhere('author', 'like', "%{$keyword}%");
+            });
+        }
+
+        // genre
+        if ($request->filled('genre')) {
+            $genreId = $request->input('genre');
+            $query->whereHas('genres', function ($q) use ($genreId) {
+                $q->where('genres.id', $genreId);
+            });
+        }
+
+        // sort
+        if ($request->filled('sort')) {
+            $sort = $request->input('sort');
+            switch ($sort) {
+                case 'newest':
+                    $query->orderBy('published_date', 'desc');
+                    break;
+                case 'oldest':
+                    $query->orderBy('published_date', 'asc');
+                    break;
+                case 'rating':
+                    $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->orderBy('title', 'asc'); ;
+                    break;
+                case 'title':
+                    $query->orderBy('title', 'asc');
+                    break;
+            }
+        }
+
+        $books = $query->paginate(10);
 
         return view('books.index', compact('books'));
     }
