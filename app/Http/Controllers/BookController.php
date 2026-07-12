@@ -22,6 +22,7 @@ class BookController extends Controller
      */
     public function index(IndexBookRequest $request): View
     {
+        $genres = Genre::all();
         $query = Book::with('genres');
 
         // keyword
@@ -44,25 +45,17 @@ class BookController extends Controller
         // sort
         if ($request->filled('sort')) {
             $sort = $request->input('sort');
-            switch ($sort) {
-                case 'newest':
-                    $query->orderBy('published_date', 'desc');
-                    break;
-                case 'oldest':
-                    $query->orderBy('published_date', 'asc');
-                    break;
-                case 'rating':
-                    $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->orderBy('title', 'asc'); ;
-                    break;
-                case 'title':
-                    $query->orderBy('title', 'asc');
-                    break;
-            }
+            $query = match ($sort) {
+                'newest'  => $query->orderBy('published_date', 'desc'),
+                'oldest' => $query->orderBy('published_date', 'asc'),
+                'rating' => $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->orderBy('id', 'asc'),
+                'title'  => $query->orderBy('title', 'asc'),
+            };
         }
 
-        $books = $query->paginate(10);
+        $books = $query->paginate(10)->withQueryString();
 
-        return view('books.index', compact('books'));
+        return view('books.index', compact('books', 'genres'));
     }
 
     /**

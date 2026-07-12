@@ -117,7 +117,7 @@
                         </div>
 
                         <div class="mt-6">
-                            {{ $books->appends(request()->query())->links() }}
+                            {{ $books->links() }}
                         </div>
                     @endif
                 </div>

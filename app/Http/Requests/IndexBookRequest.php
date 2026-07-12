@@ -24,7 +24,7 @@ class IndexBookRequest extends FormRequest
         return [
             'keyword' => ['nullable', 'string', 'max:255'],
             'genre' => ['nullable', 'exists:genres,id'],
-            'sort' => ['nullable', 'in:newest, oldest, rating, title']
+            'sort' => ['nullable', 'in:newest,oldest,rating,title']
         ];
     }
 
