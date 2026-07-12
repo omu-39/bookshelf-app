@@ -51,3 +51,4 @@ Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index
 // 仮のルーティング
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::get('/reading-plans', [ReadingPlanController::class, 'index'])->name('reading-plans.index');
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
