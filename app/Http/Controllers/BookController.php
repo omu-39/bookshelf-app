@@ -46,8 +46,8 @@ class BookController extends Controller
         if ($request->filled('sort')) {
             $sort = $request->input('sort');
             $query = match ($sort) {
-                'newest'  => $query->orderBy('published_date', 'desc'),
-                'oldest' => $query->orderBy('published_date', 'asc'),
+                default  => $query->orderBy('created_at', 'desc'),
+                'oldest' => $query->orderBy('created_at', 'asc'),
                 'rating' => $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->orderBy('id', 'asc'),
                 'title'  => $query->orderBy('title', 'asc'),
             };
