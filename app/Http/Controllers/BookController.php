@@ -7,8 +7,11 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 
 class BookController extends Controller
@@ -61,7 +64,7 @@ class BookController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
         $genres = Genre::all();
 
@@ -145,5 +148,69 @@ class BookController extends Controller
         $book->delete();
 
         return redirect()->route('books.index')->with('success', '書籍を削除しました。');
+    }
+
+    /**
+     * Google Books Api から書籍情報を取得する
+     * 入力されたISBNから検索する
+     *
+     * @param string $isbn 入力されたISBN
+     * @return array 書籍情報
+     */
+    public function fetchByIsbn(string $isbn): JsonResponse
+    {
+        // 入力されたisbnの前後の余白を除去
+        $isbn = trim($isbn);
+
+        // 無効な入力を早めにはじくための処理
+        if (strlen($isbn) !== 13) {
+            return response()->json(['error' => 'ISBNは13桁で入力してください。'], 400);
+        }
+
+        // try{} エラーが起きるかもしれない処理を書いてる
+        try {
+            // laravel標準搭載のHTTPクライアントを使用して google books api にHTTPリクエスト送信
+            $response = Http::timeout(10)->get('https://www.googleapis.com/books/v1/volumes', [
+                // 公式Docに記載されている検索方法
+                'q' => 'isbn:' . $isbn,
+                // 見つかったら一件だけ取得
+                'maxResults' => 1,
+                'key' => config('services.google_books.key')
+            ]);
+
+            // 上記の処理に失敗した時に返すエラー
+            if (! $response->successful()) {
+                return response()->json(['error' => '書籍情報の取得に失敗しました。'], 502);
+            }
+
+            // API から帰ってきたJSONデータを$itemsに入れてる 配列なのは返ってきたJSONデータが配列だから
+            $items = $response->json('items', []);
+            // 配列から本のデータを取りだす ['volumeInfo']は書かないと本以外のデータも取得してしまう
+            // 公式DocでレスポンスJSONを確認すると分かりやすい
+            $volumeInfo = $items[0]['volumeInfo'] ?? [];
+
+            // 空だった場合のエラーメッセージ
+            if (empty($volumeInfo)) {
+                return response()->json(['error' => '該当する書籍が見つかりませんでした。'], 404);
+            }
+
+            // volumeInfoからimageLinks配列を取得
+            $imageLinks = $volumeInfo['imageLinks'] ?? [];
+            // thumbnailサイズを取得、なければsmallThumbnailサイズを取得
+            $imageUrl = $imageLinks['thumbnail'] ?? $imageLinks['smallThumbnail'] ?? null;
+
+            // フロントエンドにJSONデータを返す
+            return response()->json([
+                'title' => $volumeInfo['title'] ?? null,
+                // 配列からデータを安全に取得する ドット記法で
+                'author' => data_get($volumeInfo, 'authors.0'),
+                'description' => $volumeInfo['description'] ?? null,
+                'published_date' => $volumeInfo['publishedDate'] ?? null,
+                'image_url' => $imageUrl,
+            ]);
+        // 予期しないエラー(通信系、APIが落ちてる、JSONが壊れてる等)が投げられたときに返すエラーメッセージ
+        } catch (\Throwable $e) {
+            return response()->json(['error' => '通信エラーが発生しました。'], 500);
+        }
     }
 }
