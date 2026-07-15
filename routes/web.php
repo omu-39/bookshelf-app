@@ -4,6 +4,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\RankingController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/genres/{genre}', [GenreController::class, 'update'])->name('genres.update');
     Route::get('/genres/{genre}/edit', [GenreController::class, 'edit'])->name('genres.edit');
     Route::delete('/genres/{genre}', [GenreController::class, 'destroy'])->name('genres.destroy');
+
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 });
 
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
@@ -50,6 +53,5 @@ Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show')
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
 
 // 仮のルーティング
-Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::get('/reading-plans', [ReadingPlanController::class, 'index'])->name('reading-plans.index');
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
