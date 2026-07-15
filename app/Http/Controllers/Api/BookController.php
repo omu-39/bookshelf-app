@@ -107,6 +107,8 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book): BookDetailResource
     {
+        $this->authorize('update', $book);
+
         $validated = $request->validated();
 
         $book->update([
@@ -134,6 +136,8 @@ class BookController extends Controller
      */
     public function destroy(Book $book): JsonResponse
     {
+        $this->authorize('delete', $book);
+
         $book->delete();
 
         return response()->json(null, 204);

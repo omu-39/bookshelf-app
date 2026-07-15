@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthTokenController;
 use App\Http\Controllers\Api\BookController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +16,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->group(function () {
-    Route::apiResource('books', BookController::class);
+    Route::post('/login', [AuthTokenController::class, 'login']);
+
+    Route::apiResource('books', BookController::class)->only('index', 'show');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::apiResource('books', BookController::class)->only('store', 'update', 'destroy');
+    });
 });
