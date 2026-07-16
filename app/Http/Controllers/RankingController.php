@@ -8,7 +8,10 @@ use Illuminate\View\View;
 class RankingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * ランキング画面の表示
+     * 書籍のレビュー件数、平均評価順にTOP10を取得
+     * 
+     * @return View ランキング画面
      */
     public function index(): View
     {

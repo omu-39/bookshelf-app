@@ -11,7 +11,9 @@ use Illuminate\View\View;
 class GenreController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * ジャンル一覧画面の表示
+     * 
+     * @return View ジャンル一覧
      */
     public function index(): View
     {
@@ -21,7 +23,9 @@ class GenreController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * ジャンル登録画面の表示
+     * 
+     * @return View ジャンル登録画面
      */
     public function create(): View
     {
@@ -29,7 +33,10 @@ class GenreController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * ジャンルの登録
+     * 
+     * @param StoreGenreRequest $request 登録内容
+     * @return RedirectResponse ジャンル一覧
      */
     public function store(StoreGenreRequest $request): RedirectResponse
     {
@@ -39,7 +46,10 @@ class GenreController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * ジャンル詳細画面の表示
+     * 
+     * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
+     * @return View 詳細画面
      */
     public function show(Genre $genre)
     {
@@ -49,7 +59,10 @@ class GenreController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * ジャンル編集画面の表示
+     * 
+     * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
+     * @return View 編集画面
      */
     public function edit(Genre $genre)
     {
@@ -57,7 +70,11 @@ class GenreController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * ジャンルの更新
+     * 
+     * @param UpdateGenreRequest $request 更新データ
+     * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
+     * @return RedirectResponse ジャンル一覧
      */
     public function update(UpdateGenreRequest $request, Genre $genre)
     {
@@ -67,7 +84,11 @@ class GenreController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * ジャンル削除
+     * 紐づく書籍がある場合削除ガード
+     * 
+     * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
+     * @return RedirectResponse 前のページ
      */
     public function destroy(Genre $genre)
     {

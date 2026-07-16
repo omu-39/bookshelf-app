@@ -13,7 +13,11 @@ use Illuminate\View\View;
 class ReviewController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
+     * レビューの投稿
+     * 
+     * @param StoreReviewRequest $request 投稿データ
+     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @return RedirectResponse 書籍詳細画面
      */
     public function store(StoreReviewRequest $request, Book $book)
     {
@@ -30,7 +34,10 @@ class ReviewController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * レビュー編集画面の表示
+     * 
+     * @param Revuew $review ルートパラメータから取得したReviewオブジェクト
+     * @return View 編集画面
      */
     public function edit(Review $review): View
     {
@@ -40,7 +47,11 @@ class ReviewController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * レビューの更新
+     * 
+     * @param UpdateReviewRequest $request 更新データ
+     * @param Review $review ルートパラメータから取得したReviewオブジェクト
+     * @return RedirectResponse 書籍詳細画面
      */
     public function update(UpdateReviewRequest $request, Review $review): RedirectResponse
     {
@@ -60,7 +71,10 @@ class ReviewController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * レビューの削除
+     * 
+     * @param Review $review ルートパラメータから取得したReviewオブジェクト
+     * @return RedirectResponse 書籍詳細画面
      */
     public function destroy(Review $review): RedirectResponse
     {
@@ -73,6 +87,13 @@ class ReviewController extends Controller
         return redirect()->route('books.show', compact('book'))->with('success', 'レビューを削除しました。');
     }
 
+    /**
+     * レビューのいいね機能
+     * toggle()で切り替え
+     * 
+     * @param Review $review ルートパラメータから取得したReviewオブジェクト
+     * @return RedirectResponse 書籍詳細画面
+     */
     public function like(Review $review): RedirectResponse
     {
         $book = $review->book;
