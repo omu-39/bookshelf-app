@@ -193,14 +193,14 @@ class BookController extends Controller
             ]);
 
             if (! $response->successful()) {
-                return response()->json(['error' => '書籍情報の取得に失敗しました。'], 502);
+                return response()->json(['error' => '書籍情報の取得に失敗しました。'], 500);
             }
 
             $items = $response->json('items', []);
             $volumeInfo = $items[0]['volumeInfo'] ?? [];
 
             if (empty($volumeInfo)) {
-                return response()->json(['error' => '該当する書籍が見つかりませんでした。'], 404);
+                return response()->json(['error' => '書籍が​見つかりませんでした。'], 404);
             }
 
             $imageLinks = $volumeInfo['imageLinks'] ?? [];
