@@ -62,9 +62,11 @@ class BookController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 書籍登録画面の表示
+     * 
+     * @return View
      */
-    public function create(Request $request): View
+    public function create(): View
     {
         $genres = Genre::all();
 
@@ -72,7 +74,11 @@ class BookController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 書籍の登録
+     * 書籍の新規作成とジャンルの紐付け
+     * 
+     * @param StoreBookRequest $request 書籍登録データ
+     * @return RedirectResponse 詳細画面
      */
     public function store(StoreBookRequest $request): RedirectResponse
     {
@@ -94,7 +100,10 @@ class BookController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 書籍詳細画面の表示
+     * 
+     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @return View 詳細画面
      */
     public function show(Book $book): View
     {
@@ -104,7 +113,10 @@ class BookController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 書籍編集画面の表示
+     * 
+     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @return View 詳細画面
      */
     public function edit(Book $book): View
     {
@@ -116,7 +128,12 @@ class BookController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 書籍の更新
+     * 内容の更新とジャンルを紐づけ
+     * 
+     * @param UpdateBookRequest $request 更新データ
+     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @return RedirectResponse 詳細画面
      */
     public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
@@ -139,7 +156,10 @@ class BookController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 書籍の削除
+     * 
+     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @return RedirectResponse 一覧画面
      */
     public function destroy(Book $book)
     {
