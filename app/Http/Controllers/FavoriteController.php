@@ -10,7 +10,9 @@ use Illuminate\View\View;
 class FavoriteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * お気に入り一覧画面の表示
+     * 
+     * @return View お気に入り一覧画面
      */
     public function index(): View
     {
@@ -20,7 +22,11 @@ class FavoriteController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * お気に入り機能
+     * toggle()で切り替え
+     * 
+     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @return RedirectResponse 書籍詳細画面
      */
     public function toggle(Book $book): RedirectResponse
     {
