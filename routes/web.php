@@ -4,6 +4,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\RankingController;
+use App\Http\Controllers\ReadingPlanController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/genres/{genre}', [GenreController::class, 'destroy'])->name('genres.destroy');
 
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+
+    Route::get('/reading-plans', [ReadingPlanController::class, 'index'])->name('reading-plans.index');
+    Route::get('/reading-plans/create', [ReadingPlanController::class, 'create'])->name('reading-plans.create');
+    Route::post('/reading-plans/create', [ReadingPlanController::class, 'store'])->name('reading-plans.store');
+    Route::post('/reading-plans/{plan}/complete', [ReadingPlanController::class, 'complete'])->name('reading-plans.complete');
+    Route::get('/reading-plans/{plan}/edit', [ReadingPlanController::class, 'edit'])->name('reading-plans.edit');
+    Route::put('/reading-plans/{plan}/edit', [ReadingPlanController::class, 'update'])->name('reading-plans.update');
+    Route::delete('/reading-plans/{plan}', [ReadingPlanController::class, 'destroy'])->name('reading-plans.destroy');
 });
 
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
@@ -53,5 +62,4 @@ Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show')
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
 
 // 仮のルーティング
-Route::get('/reading-plans', [ReadingPlanController::class, 'index'])->name('reading-plans.index');
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
