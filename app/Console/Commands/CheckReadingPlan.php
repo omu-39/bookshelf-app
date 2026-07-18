@@ -30,7 +30,7 @@ class CheckReadingPlan extends Command
         ReadingPlan::query()
             ->whereDate('target_date', $date)
             ->where('status', '!=', ReadingPlanStatus::Completed->value)
-            ->with('user') // N+1防止
+            ->with('book')
             ->each(fn($plan) => $plan->user?->notify(new $notification($plan)));
     }
 
