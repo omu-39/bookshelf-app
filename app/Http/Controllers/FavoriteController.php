@@ -30,7 +30,8 @@ class FavoriteController extends Controller
      */
     public function toggle(Book $book): RedirectResponse
     {
-        Auth::user()->favoriteBooks()->toggle($book->id);
+        $user = Auth::user();
+        $user->favoriteBooks()->toggle($book->id);
 
         return redirect()->route('books.show', compact('book'));
     }

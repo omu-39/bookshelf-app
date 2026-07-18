@@ -6,6 +6,8 @@ use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
 use App\Models\Book;
 use App\Models\Review;
+use App\Notifications\BookReviewedNotification;
+use App\Notifications\ReviewLikedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -29,6 +31,8 @@ class ReviewController extends Controller
             'rating' => $validated['rating'],
             'comment' => $validated['comment'],
         ]);
+
+        $book->user->notify(new BookReviewedNotification($book));
 
         return redirect()->route('books.show', compact('book'))->with('success', 'レビューを投稿しました。');
     }
@@ -97,8 +101,13 @@ class ReviewController extends Controller
     public function like(Review $review): RedirectResponse
     {
         $book = $review->book;
+        $user = Auth::user();
+        $result =  $user->likedReviews()->toggle($review->id);
 
-        Auth::user()->likedReviews()->toggle($review->id);
+        if (!empty($result['attached'])) {
+            // いいねが新規追加されたときだけ通知
+            $review->user->notify(new ReviewLikedNotification($user));
+        }
 
         return redirect()->route('books.show', compact('book'));
     }
