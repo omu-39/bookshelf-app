@@ -88,10 +88,10 @@ class BookController extends Controller
             'user_id' => Auth::id(),
             'title' => $validated['title'],
             'author' => $validated['author'],
-            'isbn' => $validated['isbn'],
-            'published_date' => $validated['published_date'],
-            'description' => $validated['description'],
-            'image_url' => $validated['image_url'],
+            'isbn' => $validated['isbn'] ?? null,
+            'published_date' => $validated['published_date'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'image_url' => $validated['image_url'] ?? null,
         ]);
 
         $book->genres()->sync($validated['genres']);
@@ -144,10 +144,10 @@ class BookController extends Controller
         $book->update([
             'title' => $validated['title'],
             'author' => $validated['author'],
-            'isbn' => $validated['isbn'],
-            'published_date' => $validated['published_date'],
-            'description' => $validated['description'],
-            'image_url' => $validated['image_url'],
+            'isbn' => $validated['isbn'] ?? null,
+            'published_date' => $validated['published_date'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'image_url' => $validated['image_url'] ?? null,
         ]);
 
         $book->genres()->sync($validated['genres']);

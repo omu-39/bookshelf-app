@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('author');
             $table->string('isbn')->unique()->nullable();
-            $table->date('published_date');
+            $table->date('published_date')->nullable();
             $table->text('description')->nullable();
             $table->string('image_url')->nullable();
             $table->timestamps();

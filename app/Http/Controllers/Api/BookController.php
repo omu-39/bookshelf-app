@@ -67,8 +67,8 @@ class BookController extends Controller
             'user_id' => $validated['user_id'],
             'title' => $validated['title'],
             'author' => $validated['author'],
-            'isbn' => $validated['isbn'],
-            'published_date' => $validated['published_date'],
+            'isbn' => $validated['isbn'] ?? null,
+            'published_date' => $validate['published_date'] ?? null,
             'description' => $validated['description'] ?? null,
             'image_url' => $validated['image_url'] ?? null,
         ]);
@@ -115,8 +115,8 @@ class BookController extends Controller
             'user_id' => $validated['user_id'],
             'title' => $validated['title'],
             'author' => $validated['author'],
-            'isbn' => $validated['isbn'],
-            'published_date' => $validated['published_date'],
+            'isbn' => $validated['isbn'] ?? null,
+            'published_date' => $validated['published_date'] ?? null,
             'description' => $validated['description'] ?? null,
             'image_url' => $validated['image_url'] ?? null,
         ]);
