@@ -14,9 +14,6 @@ class BookSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::first();
-        $genres = Genre::all()->keyBy('name');
-
         $books = [
             ['title' => '吾輩は猫である', 'author' => '夏目漱石', 'isbn' => 9784101010014, 'publication_date' => '1905-01-01', 'genres' => ['小説'], 'description' => '名前を持たない一匹の猫の視点から、明治時代の人間たちの滑稽さや見栄を皮肉たっぷりに描いた風刺小説です。', 'image_url' => 'https://placehold.co/200x300/e2e8f0/475569?text=1'],
             ['title' => '人を動かす', 'author' => 'D・カーネギー', 'isbn' => 9784422100524, 'publication_date' => '1936-10-01', 'genres' => ['ビジネス', '自己啓発'], 'description' => '人間関係の原則を具体的なエピソードで解説した自己啓発の名著。相手を動かすためには批判せず、真摯に関心を持つことが大切だと説きます。', 'image_url' => 'https://placehold.co/200x300/e2e8f0/475569?text=2'],
@@ -31,10 +28,13 @@ class BookSeeder extends Seeder
             ['title' => 'コンテナ物語', 'author' => 'マルク・レビンソン', 'isbn' => 9784822251468, 'publication_date' => '2007-01-18', 'genres' => ['ビジネス', '歴史'], 'description' => '鉄のコンテナが世界の物流を劇的に変え、グローバル経済を生み出した歴史を描いたノンフィクション。技術革新と経済変革の関係を解説します。', 'image_url' => 'https://placehold.co/200x300/e2e8f0/475569?text=11'],
         ];
 
+        $users = User::all();
+        $genres = Genre::all()->keyBy('name');
+
         foreach ($books as $data) {
             $book = Book::firstOrCreate(
                 [
-                    'user_id' => $user->id,
+                    'user_id' => $users->random()->id,
                     'title' => $data['title'],
                     'author' => $data['author'],
                     'isbn' => $data['isbn'],
