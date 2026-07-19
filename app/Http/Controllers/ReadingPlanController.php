@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ReadingPlanStatus;
-use App\Http\Requests\ReadingPlanRequest;
+use App\Http\Requests\StoreReadingPlanRequest;
 use App\Http\Requests\UpdateReadingPlanRequest;
 use App\Models\Book;
 use App\Models\ReadingPlan;
@@ -55,10 +55,10 @@ class ReadingPlanController extends Controller
     /**
      * 読書計画の作成処理
      * 
-     * @param ReadingPlanRequest $request 読書計画データ
+     * @param StoreReadingPlanRequest $request 読書計画データ
      * @return RedirectResponse 読書計画一覧画面
      */
-    public function store(ReadingPlanRequest $request): RedirectResponse
+    public function store(StoreReadingPlanRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
