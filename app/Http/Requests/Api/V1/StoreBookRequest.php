@@ -20,7 +20,6 @@ class StoreBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
             'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
             'isbn' => ['nullable', 'string', 'digits:13', 'unique:books,isbn'],
@@ -35,9 +34,6 @@ class StoreBookRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'ユーザーIDは必須です。',
-            'user_id.integer' => 'ユーザーIDの形式が正しくありません。',
-            'user_id.exists' => '指定された​登録者は​存在しません。​',
             'title.required' => 'タイトルは必須です。',
             'title.string' => 'タイトルは​文字列で​入力してください。',
             'title.max' => 'タイトルは255文字以下で入力してください。',

@@ -12,6 +12,7 @@ use App\Models\Book;
 use App\Models\Genre;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -64,11 +65,11 @@ class BookController extends Controller
         $validated = $request->validated();
 
         $book = Book::create([
-            'user_id' => $validated['user_id'],
+            'user_id' => Auth::id(),
             'title' => $validated['title'],
             'author' => $validated['author'],
             'isbn' => $validated['isbn'] ?? null,
-            'published_date' => $validate['published_date'] ?? null,
+            'published_date' => $validated['published_date'] ?? null,
             'description' => $validated['description'] ?? null,
             'image_url' => $validated['image_url'] ?? null,
         ]);
@@ -112,7 +113,7 @@ class BookController extends Controller
         $validated = $request->validated();
 
         $book->update([
-            'user_id' => $validated['user_id'],
+            'user_id' => Auth::id(),
             'title' => $validated['title'],
             'author' => $validated['author'],
             'isbn' => $validated['isbn'] ?? null,
