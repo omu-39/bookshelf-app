@@ -17,17 +17,17 @@ class ReviewSeeder extends Seeder
         $users = User::all();
         $books = Book::all();
 
-        foreach ($books as $book) {
-            $randomUsers = $users->random(rand(2, 4));
+        $books->each(function ($book) use ($users) {
+            $randomUsers = $users
+                ->where('id', '!=', $book->user_id)
+                ->random(rand(2, 4));
 
             foreach ($randomUsers as $user) {
-                Review::create([
+                Review::factory()->create([
                     'book_id' => $book->id,
                     'user_id' => $user->id,
-                    'rating' => rand(3, 5),
-                    'comment' => fake()->realText(rand(50, 100)),
                 ]);
             }
-        }
+        });
     }
 }

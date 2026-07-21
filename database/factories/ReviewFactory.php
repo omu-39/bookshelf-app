@@ -19,11 +19,21 @@ class ReviewFactory extends Factory
      */
     public function definition(): array
     {
+        $comments = [
+            1 => '期待していた内容とは大きく違い、正直がっかりしました。',
+            2 => 'ところどころ良い点はありましたが、全体的には物足りませんでした。',
+            3 => '特別良いわけではないですが、時間つぶしにはちょうど良かったです。',
+            4 => 'とても楽しめました。気になる点は少しありましたが満足です。',
+            5 => '最高でした！また読み返したいと思える作品です。',
+        ];
+
+        $rating = fake()->numberBetween(1, 5);
+
         return [
             'book_id' => Book::factory(),
             'user_id' => User::factory(),
-            'rating' => rand(3, 5),
-            'comment' => fake()->paragraph(),
+            'rating' => $rating,
+            'comment' => $comments[$rating],
         ];
     }
 }
