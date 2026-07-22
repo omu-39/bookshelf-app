@@ -51,8 +51,8 @@ class Book extends Model
         return $this->belongsToMany(User::class, 'favorites');
     }
 
-    public function readingPlans(): BelongsToMany
+    public function readingPlans(): HasMany
     {
-        return $this->belongsToMany(User::class, 'reading_plans');
+        return $this->hasMany(ReadingPlan::class);
     }
 }
