@@ -35,7 +35,7 @@ class ReadingPlanController extends Controller
             $query->where('status', $currentStatus);
         }
 
-        $readingPlans = $query->get();
+        $readingPlans = $query->orderBy('target_date', 'asc')->get();
 
         return view('reading-plans.index', compact('currentStatus', 'readingPlans'));
     }
