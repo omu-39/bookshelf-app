@@ -6,6 +6,7 @@ namespace Tests\Unit;
 
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\ReadingPlan;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,10 +26,12 @@ class UserModelTest extends TestCase
         $book->favoritedUsers()->attach($anotherUser);
         $book->genres()->attach($genre);
         $review->likedByUsers()->attach($user);
+        $readingPlan = ReadingPlan::factory()->for($user)->create();
 
         $this->assertTrue($user->books->contains($book));
         $this->assertTrue($anotherUser->reviews->contains($review));
         $this->assertTrue($anotherUser->favoriteBooks->contains($book));
         $this->assertTrue($user->likedReviews->contains($review));
+        $this->assertTrue($user->readingPlans->contains($readingPlan));
     }
 }
