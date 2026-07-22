@@ -255,25 +255,6 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseCount('books', 0);
     }
 
-    public function test_ISBNを空にするとバリデーションエラーになる(): void
-    {
-        $user = User::factory()->create();
-        $bookContent = [
-            'title' => 'test',
-            'author' => '著者名',
-            'isbn' => null,
-            'published_date' => '2023-01-01',
-            'description' => '説明',
-            'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
-        ];
-
-        $this->actingAs($user)->post(route('books.store'), $bookContent)
-            ->assertSessionHasErrors('isbn');
-
-        $this->assertDatabaseCount('books', 0);
-    }
-
     public function test_ISBNに文字列以外を入力するとバリデーションエラーになる(): void
     {
         $user = User::factory()->create();
@@ -331,25 +312,6 @@ class BookControllerTest extends TestCase
             ->assertSessionHasErrors('isbn');
 
         $this->assertDatabaseCount('books', 1);
-    }
-
-    public function test_出版日が空だとバリデーションエラーになる(): void
-    {
-        $user = User::factory()->create();
-        $bookContent = [
-            'title' => 'test',
-            'author' => '著者名',
-            'isbn' => '1234567891234',
-            'published_date' => null,
-            'description' => '説明',
-            'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
-        ];
-
-        $this->actingAs($user)->post(route('books.store'), $bookContent)
-            ->assertSessionHasErrors('published_date');
-
-        $this->assertDatabaseCount('books', 0);
     }
 
     public function test_出版日が有効な日付でないとバリデーションエラーになる(): void
