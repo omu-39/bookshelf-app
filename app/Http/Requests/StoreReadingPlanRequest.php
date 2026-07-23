@@ -23,21 +23,20 @@ class StoreReadingPlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'book_id' => ['required', 'exists:books,id', Rule::unique('reading_plans')
-            ->where('user_id', auth()->id())],
-            'target_date' => ['required', 'date', 'after:today'],
+            'book_id' => ['required', 'exists:books,id', 'integer'],
+            'target_date' => ['required', 'date', 'after_or_equal:today'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'book_id.required' => '書籍は必須です。',
-            'book_id.exists' => '登録済みの書籍から選択してください。',
-            'book_id.unique' => 'その書籍の読書計画は登録済みです。',
+            'book_id.required' => '書籍は選択してください。',
+            'book_id.exists' => '選択された書籍は存在しません。',
+            'book_id.integer' => '書籍IDは整数で入力してください。',
             'target_date.required' => '期日は必須です。',
             'target_date.date' => '期日は​有効な​日付形式で​入力してください。',
-            'target_date.after' => '期日は翌日以降を入力してください。'
+            'target_date.after_or_equal' => '期日は今日以降の日付を指定してください。'
         ];
     }
 }

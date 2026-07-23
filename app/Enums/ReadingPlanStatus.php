@@ -5,21 +5,24 @@ namespace App\Enums;
 enum ReadingPlanStatus: int
 {
     case Completed = 1;
-    case Unread = 2;
+    case Progress = 2;
+    case Expired = 3;
 
     public function label(): string
     {
         return match($this) {
             self::Completed => '読了',
-            self::Unread => '未読',
+            self::Progress => '進行中',
+            self::Expired => '期限切れ',
         };
     }
 
     public function badgeClass(): string
     {
         return match ($this) {
-            self::Unread => 'bg-yellow-100 text-yellow-800',
-            self::Completed => 'bg-green-100 text-green-800',
+            self::Completed => 'bg-green-200',
+            self::Progress => 'bg-blue-200',
+            self::Expired => 'bg-red-200',
         };
     }
 }

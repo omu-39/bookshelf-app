@@ -19,7 +19,6 @@ return new class extends Migration
             $table->date('completed_at')->nullable();
             $table->tinyInteger('status');
             $table->timestamps();
-            $table->unique(['user_id', 'book_id']);
         });
     }
 

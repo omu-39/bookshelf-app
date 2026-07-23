@@ -66,10 +66,10 @@ class ReadingPlanController extends Controller
             'user_id' => Auth::id(),
             'book_id' => $validated['book_id'],
             'target_date' => $validated['target_date'],
-            'status' => ReadingPlanStatus::Unread,
+            'status' => ReadingPlanStatus::Progress,
         ]);
 
-        return redirect()->route('reading-plans.index');
+        return redirect()->route('reading-plans.index')->with('success', '読書計画を作成しました。');
     }
 
     /**
