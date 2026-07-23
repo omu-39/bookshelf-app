@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IndexBookRequest;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
@@ -23,7 +22,7 @@ class BookController extends Controller
      * @param Request $request 検索条件
      * @return View 一覧画面
      */
-    public function index(IndexBookRequest $request): View
+    public function index(Request $request): View
     {
         $genres = Genre::all();
         $query = Book::with('genres');
