@@ -21,7 +21,7 @@ enum ReadingPlanStatus: int
     {
         return match ($this) {
             self::Completed => 'bg-green-200',
-            self::Progress => 'bg-yellow-200',
+            self::Progress => 'bg-blue-200',
             self::Expired => 'bg-red-200',
         };
     }

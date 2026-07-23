@@ -40,7 +40,7 @@ class ExpiredNotification extends Notification
         return [
             'timing' => 'three_days_after',
             'title'  => '読書計画の期限を過ぎました',
-            'body'   => "『{$this->plan->book->title}』の期限が過ぎました。",
+            'body'   => "『{$this->plan->book->title}』の期限({$this->plan->target_date->format('Y-m-d')})が過ぎました。",
         ];
     }
 }

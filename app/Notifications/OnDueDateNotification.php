@@ -6,7 +6,7 @@ use App\Models\ReadingPlan;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class DueTodayNotification extends Notification
+class OnDueDateNotification extends Notification
 {
     use Queueable;
 

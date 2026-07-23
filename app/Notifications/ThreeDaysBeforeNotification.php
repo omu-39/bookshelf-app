@@ -2,21 +2,22 @@
 
 namespace App\Notifications;
 
-use App\Models\User;
+use App\Models\ReadingPlan;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class ReviewLikedNotification extends Notification
+class ThreeDaysBeforeNotification extends Notification
 {
     use Queueable;
 
-    private $user;
+    private $plan;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct(User $user)
+    public function __construct(ReadingPlan $plan)
     {
-        $this->user = $user;
+        $this->plan = $plan;
     }
 
     /**
@@ -37,8 +38,9 @@ class ReviewLikedNotification extends Notification
     public function toArray(): array
     {
         return [
-            'title' => 'あなたのレビューがいいねされました',
-            'body' => "{$this->user->name} さんがあなたのレビューをいいねしました。",
+            'timing' => 'three_days_before',
+            'title'  => '読書計画の期限が近づいています',
+            'body'   => "『{$this->plan->book->title}』の期限は {$this->plan->target_date->format('Y-m-d')} です。",
         ];
     }
 }
