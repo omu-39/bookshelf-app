@@ -69,7 +69,7 @@ class ReadingPlanController extends Controller
             'status' => ReadingPlanStatus::Unread,
         ]);
 
-        return redirect()->route('reading-plans.index');
+        return redirect()->route('reading-plans.index')->with('success', '読書計画を作成しました。');
     }
 
     /**
