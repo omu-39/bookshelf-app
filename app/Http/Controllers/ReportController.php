@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Enums\ReadingPlanStatus;
+use App\Models\ReadingPlan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-
-use function PHPUnit\Framework\isEmpty;
 
 class ReportController extends Controller
 {
@@ -28,8 +27,7 @@ class ReportController extends Controller
         $stats = [
             'summary' => [
                 'total_reviews' => $reviews->count(),
-                // 読了冊数の仕様を要確認
-                'books_read' => $reviews->unique('book_id')->count(),
+                'books_read' => ReadingPlan::where('user_id', Auth::id())->where('status', ReadingPlanStatus::Completed->value)->count(),
                 'average_rating' => $reviews->avg('rating'),
             ],
             'rating_distribution' => collect(range(1, 5))
