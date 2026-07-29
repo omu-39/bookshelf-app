@@ -168,7 +168,7 @@ class BookController extends Controller
      * @param Book $book ルートパラメータから取得したBookオブジェクト
      * @return RedirectResponse 一覧画面
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book): RedirectResponse
     {
         $this->authorize('delete', $book);
 
