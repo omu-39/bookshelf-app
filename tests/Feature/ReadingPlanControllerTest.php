@@ -181,6 +181,20 @@ class ReadingPlanControllerTest extends TestCase
         $this->assertDatabaseHas('reading_plans', ['target_date' => today()->addDays(5)]);
     }
 
+    public function test_所有者以外は読書計画を更新できない(): void
+    {
+        $user = User::factory()->create();
+        $anotherUser = User::factory()->create();
+        $plan = ReadingPlan::factory()->for($user)->create(['target_date' => today()->addDay()]);
+
+        $this->assertDatabaseHas('reading_plans', ['target_date' => today()->addDay()]);
+
+        $this->actingAs($anotherUser)->put(route('reading-plans.update', $plan), ['target_date' => today()->addDays(5)])
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas('reading_plans', ['target_date' => today()->addDay()]);
+    }
+
     public function test_読書計画更新時_期日が未選択だとバリデーションエラーになる(): void
     {
         $user = User::factory()->create();
@@ -242,7 +256,7 @@ class ReadingPlanControllerTest extends TestCase
         $this->assertDatabaseCount('reading_plans', 1);
     }
 
-    public function test_読書計画を読了に更新できる(): void
+    public function test_所有者は読書計画を読了に更新できる(): void
     {
         $user = User::factory()->create();
         $plan = ReadingPlan::factory()->for($user)->create(['status' => ReadingPlanStatus::Progress->value]);
@@ -251,5 +265,17 @@ class ReadingPlanControllerTest extends TestCase
             ->assertRedirect(route('reading-plans.index'));
 
         $this->assertDatabaseHas('reading_plans', ['status' => ReadingPlanStatus::Completed->value]);
+    }
+
+    public function test_所有者以外は読書計画を読了にできない(): void
+    {
+        $user = User::factory()->create();
+        $anotherUser = User::factory()->create();
+        $plan = ReadingPlan::factory()->for($user)->create(['status' => ReadingPlanStatus::Progress->value]);
+
+        $this->actingAs($anotherUser)->post(route('reading-plans.complete', $plan))
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas('reading_plans', ['status' => ReadingPlanStatus::Progress->value]);
     }
 }
