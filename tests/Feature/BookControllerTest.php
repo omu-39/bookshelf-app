@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class BookControllerTest extends TestCase
@@ -20,7 +22,8 @@ class BookControllerTest extends TestCase
             $book->genres()->attach($genres->random(1, 3));
         });
 
-        $this->get(route('books.index'))->assertOk();
+        $response = $this->get(route('books.index'))->assertOk();
+        $response->assertViewHas('books');
     }
 
     public function test_ユーザーは書籍詳細画面を表示できる(): void
@@ -78,7 +81,8 @@ class BookControllerTest extends TestCase
             'genres' => [$genre->id],
         ];
 
-        $response = $this->post(route('books.store'), $bookContent);
+        $response = $this->post(route('books.store'), $bookContent)
+            ->assertStatus(302);
 
         $response->assertRedirect(route('login'));
     }
@@ -426,5 +430,229 @@ class BookControllerTest extends TestCase
             ->assertSessionHasErrors('genres.*');
 
         $this->assertDatabaseCount('books', 0);
+    }
+
+    // 下記から応用で追加した機能のテスト
+
+    public function test_キーワード検索で書籍を絞り込める(): void
+    {
+        collect(['Laravel', 'JavaScript'])
+            ->each(fn ($title) => Book::factory()->create([
+                'title' => $title,
+        ]));
+
+        $response = $this->get(route('books.index', ['keyword' => 'lara']))
+            ->assertStatus(200);
+
+        $response->assertSee('Laravel')
+            ->assertDontSee('JavaScript');
+    }
+
+    public function test_ジャンルで書籍を絞り込める(): void
+    {
+        $genre1 = Genre::factory()->create();
+        $genre2 = Genre::factory()->create();
+        $book1 = Book::factory()->create([
+            'title' => 'Laravel',
+        ]);
+        $book1->genres()->attach($genre1);
+
+        $book2 = Book::factory()->create([
+            'title' => 'JavaScript',
+        ]);
+        $book2->genres()->attach($genre2);
+
+        // ジャンル 1 は小説
+        $response = $this->get(route('books.index', ['genre' => $genre1->id]))
+            ->assertStatus(200);
+
+        $response->assertSee('Laravel', $genre1->name)
+            ->assertDontSee('JavaScript', $genre2->name);
+    }
+
+    public function test_キーワードとジャンルの組み合わせで絞り込める(): void
+    {
+        $genre1 = Genre::factory()->create();
+        $genre2 = Genre::factory()->create();
+        $book1 = Book::factory()->create([
+            'title' => 'Laravel',
+        ]);
+        $book1->genres()->attach($genre1);
+
+        $book2 = Book::factory()->create([
+            'title' => 'JavaScript',
+        ]);
+        $book2->genres()->attach($genre2);
+
+        // ジャンル 1 は小説
+        $response = $this->get(route('books.index', ['title' => 'lara', 'genre' => $genre1->id]))
+            ->assertStatus(200);
+
+        $response->assertSee('Laravel', $genre1->name)
+            ->assertDontSee('JavaScript', $genre2->name);
+    }
+
+    public function test_書籍一覧は新しい順でソートできる(): void
+    {
+        collect([
+            ['title' => 'Laravel', 'created_at' => now()],
+            ['title' => 'JavaScript', 'created_at' => now()->addSeconds(3)],
+            ['title' => 'PHP', 'created_at' => now()->addSeconds(5)],
+        ])->each(fn ($data) => Book::factory()->create($data));
+
+        $response = $this->get(route('books.index', ['sort' => 'newest']))
+            ->assertStatus(200);
+
+        $response->assertSeeInOrder([
+            'PHP',
+            'JavaScript',
+            'Laravel',
+        ]);
+    }
+
+    public function test_書籍一覧は古い順でソートできる(): void
+    {
+        collect([
+            ['title' => 'Laravel', 'created_at' => now()],
+            ['title' => 'JavaScript', 'created_at' => now()->addSeconds(3)],
+            ['title' => 'PHP', 'created_at' => now()->addSeconds(5)],
+        ])->each(fn ($data) => Book::factory()->create($data));
+
+        $response = $this->get(route('books.index', ['sort' => 'oldest']))
+            ->assertStatus(200);
+
+        $response->assertSeeInOrder([
+            'Laravel',
+            'JavaScript',
+            'PHP',
+        ]);
+    }
+
+    public function test_書籍一覧はタイトル昇順でソートできる(): void
+    {
+        collect([
+            ['title' => 'Laravel'],
+            ['title' => 'JavaScript'],
+            ['title' => 'PHP'],
+        ])->each(fn($title) => Book::factory()->create($title));
+
+        $response = $this->get(route('books.index', ['sort' => 'title']))
+            ->assertStatus(200);
+
+        $response->assertSeeInOrder([
+            'JavaScript',
+            'Laravel',
+            'PHP',
+        ]);
+    }
+
+    public function test_書籍一覧は評価順でソートできる(): void
+    {
+        $book1 = Book::factory()->create([
+            'title' => 'Laravel',
+        ]);
+
+        $book2 = Book::factory()->create([
+            'title' => 'JavaScript',
+        ]);
+
+        $book3 = Book::factory()->create([
+            'title' => 'PHP',
+        ]);
+
+        Review::factory()->create([
+            'book_id' => $book1->id,
+            'rating' => 3,
+        ]);
+
+        Review::factory()->create([
+            'book_id' => $book2->id,
+            'rating' => 5,
+        ]);
+
+        Review::factory()->create([
+            'book_id' => $book3->id,
+            'rating' => 4,
+        ]);
+
+        $response = $this->get(route('books.index', ['sort' => 'rating']))
+            ->assertStatus(200);
+
+        $response->assertSeeInOrder([
+            'JavaScript',
+            'PHP',
+            'Laravel',
+        ]);
+    }
+
+    public function test_ページを移動しても検索条件が維持されている(): void
+    {
+        Book::factory()
+            ->count(11)
+            ->sequence(
+                fn ($sequence) => [
+                    'title' => 'Laravel' . ($sequence->index + 1),
+                ]
+            )
+            ->create();
+        Book::factory()->create(['title' => 'PHP入門']);
+
+        $response = $this->get(route('books.index', [
+                'keyword' => 'Laravel',
+                'page' => 2,
+            ]))->assertOk();
+
+        $response->assertSee('Laravel11')
+            ->assertDontSee('PHP入門');
+    }
+
+    public function test_ISBN検索で書籍情報を取得できる(): void
+    {
+        $user = User::factory()->create();
+        // 9784873115658 はリーダブルコードという書籍のISBN
+        $response = $this->actingAs($user)->get('/books/isbn/9784873115658')
+            ->assertOk();
+
+        $response->assertJson(['title' => 'リーダブルコード']);
+        $response->assertJsonStructure([
+            'title',
+            'author',
+            'published_date',
+            'description',
+            'image_url',
+        ]);
+    }
+
+    public function test_ISBN検索は13桁でないと検索できない(): void
+    {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->get('/books/isbn/123456789');
+
+        $response->assertJson(['error' => 'ISBNは13桁で入力してください。'])
+            ->assertStatus(400);
+    }
+
+    public function test_存在しないISBNで検索するとエラーになる(): void
+    {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->get('/books/isbn/9999999999999');
+
+        $response->assertJson(['error' => '書籍が​見つかりませんでした。'])
+            ->assertStatus(404);
+    }
+
+    public function test_Gooble_Books_Apiが500を返したら定義したエラーレスポンスが返る(): void
+    {
+        $user = User::factory()->create();
+        Http::fake([
+            'https://www.googleapis.com/books/v1/volumes*' => Http::response([], 500),
+        ]);
+
+        $response = $this->actingAs($user)->get('/books/isbn/9784873115658');
+
+        $response->assertStatus(500)
+            ->assertJson([
+                'error' => '書籍情報の取得に失敗しました。',
+            ]);
     }
 }
