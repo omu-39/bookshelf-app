@@ -36,7 +36,7 @@ class ReviewController extends Controller
     /**
      * レビュー編集画面の表示
      * 
-     * @param Revuew $review ルートパラメータから取得したReviewオブジェクト
+     * @param Review $review ルートパラメータから取得したReviewオブジェクト
      * @return View 編集画面
      */
     public function edit(Review $review): View
