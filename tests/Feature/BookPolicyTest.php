@@ -39,6 +39,26 @@ class BookPolicyTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_他人は書籍を更新できない(): void
+    {
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+        $genre = Genre::factory()->create();
+        $book = Book::factory()->for($owner)->create(['description' => '更新前説明']);
+        $book->genres()->attach($genre);
+
+        $this->actingAs($other)
+            ->put(route('books.update', $book), [
+                    'title' => $book->title,
+                    'author' => $book->author,
+                    'description' => '更新後説明',
+                    'genres' => [$genre->id],
+                ])
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('books', ['description' => '更新前説明']);
+    }
+
     public function test_他人は書籍を削除できない(): void
     {
         $owner = User::factory()->create();
