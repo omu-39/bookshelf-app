@@ -11,7 +11,6 @@ use App\Http\Resources\Api\V1\BookResource;
 use App\Models\Book;
 use App\Models\Genre;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
