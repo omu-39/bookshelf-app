@@ -51,7 +51,7 @@ class GenreController extends Controller
      * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
      * @return View 詳細画面
      */
-    public function show(Genre $genre)
+    public function show(Genre $genre): View
     {
         $books = $genre->books()->paginate(10);
 
@@ -64,7 +64,7 @@ class GenreController extends Controller
      * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
      * @return View 編集画面
      */
-    public function edit(Genre $genre)
+    public function edit(Genre $genre): View
     {
         return view('genres.edit', compact('genre'));
     }
@@ -76,7 +76,7 @@ class GenreController extends Controller
      * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
      * @return RedirectResponse ジャンル一覧
      */
-    public function update(UpdateGenreRequest $request, Genre $genre)
+    public function update(UpdateGenreRequest $request, Genre $genre): RedirectResponse
     {
         $genre->update($request->validated());
 
@@ -90,7 +90,7 @@ class GenreController extends Controller
      * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
      * @return RedirectResponse 前のページ
      */
-    public function destroy(Genre $genre)
+    public function destroy(Genre $genre): RedirectResponse
     {
         if ($genre->books()->exists()) {
             return redirect()->route('genres.index')->with('error', 'この​ジャンルには​書籍が​紐付いている​ため削除できません。​');

@@ -19,7 +19,7 @@ class ReviewController extends Controller
      * @param Book $book ルートパラメータから取得したBookオブジェクト
      * @return RedirectResponse 書籍詳細画面
      */
-    public function store(StoreReviewRequest $request, Book $book)
+    public function store(StoreReviewRequest $request, Book $book): RedirectResponse
     {
         $validated = $request->validated();
 
