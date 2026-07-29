@@ -12,6 +12,7 @@ use App\Models\Book;
 use App\Models\Genre;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -63,19 +64,23 @@ class BookController extends Controller
     {
         $validated = $request->validated();
 
-        $book = Book::create([
-            'user_id' => Auth::id(),
-            'title' => $validated['title'],
-            'author' => $validated['author'],
-            'isbn' => $validated['isbn'] ?? null,
-            'published_date' => $validated['published_date'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'image_url' => $validated['image_url'] ?? null,
-        ]);
+        $book = DB::transaction(function () use ($validated) {
+            $book = Book::create([
+                'user_id' => Auth::id(),
+                'title' => $validated['title'],
+                'author' => $validated['author'],
+                'isbn' => $validated['isbn'] ?? null,
+                'published_date' => $validated['published_date'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'image_url' => $validated['image_url'] ?? null,
+            ]);
 
-        $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
-        $book->genres()->sync($genreIds);
-        $book->load(['genres']);
+            $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
+            $book->genres()->sync($genreIds);
+            $book->load(['genres']);
+
+            return $book;
+        });
 
         return (new BookDetailResource($book))
             ->response()
@@ -111,19 +116,21 @@ class BookController extends Controller
 
         $validated = $request->validated();
 
-        $book->update([
-            'user_id' => Auth::id(),
-            'title' => $validated['title'],
-            'author' => $validated['author'],
-            'isbn' => $validated['isbn'] ?? null,
-            'published_date' => $validated['published_date'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'image_url' => $validated['image_url'] ?? null,
-        ]);
+        DB::transaction(function () use ($book, $validated) {
+            $book->update([
+                'user_id' => Auth::id(),
+                'title' => $validated['title'],
+                'author' => $validated['author'],
+                'isbn' => $validated['isbn'] ?? null,
+                'published_date' => $validated['published_date'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'image_url' => $validated['image_url'] ?? null,
+            ]);
 
-        $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
-        $book->genres()->sync($genreIds);
-        $book->load(['genres']);
+            $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
+            $book->genres()->sync($genreIds);
+            $book->load(['genres']);
+        });
 
         return new BookDetailResource($book);
     }
