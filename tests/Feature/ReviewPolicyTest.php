@@ -18,7 +18,7 @@ class ReviewPolicyTest extends TestCase
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $genre = Genre::factory()->create();
-        $book = Book::factory()->for($owner)->create();
+        $book = Book::factory()->create();
         $book->genres()->attach($genre);
         $review = Review::factory()->for($owner)->for($book)->create();
 
@@ -33,7 +33,7 @@ class ReviewPolicyTest extends TestCase
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $genre = Genre::factory()->create();
-        $book = Book::factory()->for($owner)->create();
+        $book = Book::factory()->create();
         $book->genres()->attach($genre);
         $review = Review::factory()->for($owner)->for($book)->create();
 
@@ -42,12 +42,28 @@ class ReviewPolicyTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_他人はレビューを更新できない(): void
+    {
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+        $genre = Genre::factory()->create();
+        $book = Book::factory()->create();
+        $book->genres()->attach($genre);
+        $review = Review::factory()->for($owner)->for($book)->create(['rating' => 3]);
+
+        $this->actingAs($other)
+            ->put(route('reviews.update', $review), ['rating' => 5, 'comment' => '更新後コメント'])
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('reviews', ['rating' => 3]);
+    }
+
     public function test_他人はレビューを削除できない(): void
     {
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $genre = Genre::factory()->create();
-        $book = Book::factory()->for($owner)->create();
+        $book = Book::factory()->create();
         $book->genres()->attach($genre);
         $review = Review::factory()->for($owner)->for($book)->create();
 
