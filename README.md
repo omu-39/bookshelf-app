@@ -8,25 +8,93 @@ COACHTECH 模擬案件にて作成した成果物です。(バックエンド部
 
 ## 機能一覧
 
-- 認証機能 (登録・ログイン・ログアウト)
-- 書籍の CRUD
-- レビュー機能 (投稿・編集・削除)
-- 所有者だけが編集・削除できる認可 (書籍・レビュー)
-- ジャンルの作成・削除 (削除ガード)
-- 読書計画機能 (作成・更新・削除)
-- マイ書籍レポート画面
+### 認証・ユーザー管理
+
+- ユーザー登録・ログイン・ログアウト機能
+- Laravel Sanctumを使用したAPIトークン認証
+
+### 書籍管理
+
+- 書籍のCRUD機能
+- Google Books APIを利用したISBN検索・書籍情報取得機能
+- 書籍一覧検索機能（キーワード検索・ジャンル検索・ソート）
 - 書籍のお気に入り機能
-- レビューのいいね機能
-- 書籍の評価ランキング機能
-- 公開 REST API (書籍の CRUD・JSON)
+- 書籍評価ランキング機能
+
+### レビュー機能
+
+- レビュー投稿・編集・削除機能
+- レビューいいね機能
+
+### 読書計画管理
+
+- 読書期限を設定した読書計画の作成・更新・削除・読了管理
+- `reading-plans:check`コマンドによる読書計画のステータス更新・リマインダー通知の即時実行
+- Laravel Schedulerによる定期的な読書計画チェック・通知処理
+
+### 通知機能
+
+- 通知一覧表示
+- 通知既読処理
+
+### レポート機能
+
+- マイ書籍レポート画面
+    - 総レビュー数
+    - 読了冊数
+    - 平均評価
+    - 評価分布
+    - 高評価書籍TOP5などの集計表示
+
+### 権限管理
+
+- 所有者のみ編集・削除可能な認可制御
+    - 書籍
+    - レビュー
+    - 読書計画
+
+### API機能
+
+- REST APIの実装
+    - ログインAPI
+    - 書籍CRUD API
 
 ## 使用技術
 
-- Docker / Docker Compose（Laravel Sail）
-- PHP 8.5 / Laravel 10.x / MySQL 8.4
-- Laravel Fortify
+### Frontend
+
+- Blade
+- JavaScript
 - Tailwind css
+- Alpine.js
+- Vite
+
+### Backend
+
+- PHP 8.5
+- Laravel 10.x
+- Laravel Fortify
+- Laravel Sanctum
+- Laravel Scheduler
+- Laravel Artisan Command
+- PHPUnit
+
+### Database
+
+- MySQL 8.4
+
+### Database Management Tool
+
 - phpMyAdmin
+
+### Infrastracture
+
+- Docker
+- Laravel Sail
+
+### External API
+
+- Google Books API
 
 ## 環境構築
 
@@ -118,9 +186,31 @@ cp .env.example .env
 ./vendor/bin/sail npm run dev
 ```
 
+## Artisan Command
+
+読書計画の状態更新・通知処理を手動実行できます。
+
+```bash
+./vendor/bin/sail artisan reading-plans:check
+```
+
+## テスト実行
+
+以下のコマンドでテストを実行できます。
+
+```bash
+./vendor/bin/sail artisan test
+```
+
+テストカバレッジを確認する場合は以下のコマンドで確認できます。
+
+```bash
+./vendor/bin/sail artisan test --coverage
+```
+
 ## ER図
 
-![ER図(alt)](ER.png)
+![ER図(alt)](ER.jpg)
 
 ## 初期データ
 
@@ -156,7 +246,21 @@ password:password
 
 ---
 
-※山田太郎のアカウントで書籍を11件登録しております。初期登録されている書籍の編集・削除を行いたい場合は山田太郎のアカウントでログインしてください。
+### 書籍一覧
+
+- 吾輩は猫である / 夏目漱石
+- 人を動かす / D・カーネギー
+- リーダブルコード / Dustin Boswell
+- 7つの習慣 / スティーブン・R・コヴィー
+- 坊っちゃん / 夏目漱石
+- サピエンス全史 / ユヴァル・ノア・ハラリ
+- Clean Code / Robert C. Martin
+- 嫌われる勇気 / 岸見一郎・古賀史健
+- 火花 / 又吉直樹
+- FACTFULNESS / ハンス・ロスリング
+- コンテナ物語 / マルク・レビンソン
+
+※それぞれの書籍を登録したユーザーはテストアカウントからランダムに選択されます。
 
 ### ジャンル一覧
 
@@ -171,13 +275,34 @@ password:password
 - 料理
 - 旅行
 
+### 読書計画一覧 (例)
+
+- 山田太郎の読書計画は、通知機能・自動更新の確認のため、全パターン生成されます。
+- 山田太郎以外のユーザーには、それぞれ1件ずつランダムな読書計画が生成されます。
+
+- 山田太郎 / 吾輩は猫である / 期日: 3日前 / 状態: 進行中
+- 山田太郎 / リーダブルコード / 期日: 前日 / 状態: 進行中
+- 山田太郎 / 7つの習慣 / 期日: 今日 / 状態: 進行中
+- 山田太郎 / Clean Code / 期日: 3日後 / 状態: 進行中
+- 山田太郎 / Clean Code / 期日: 4日後以降 / 状態: 進行中
+- 山田太郎 / Clean Code / 期日: 4日後以降 / 状態: 読了
+- 鈴木花子 / 人を動かす / 期日: ランダム / 状態: ランダム
+- 田中一郎 / サピエンス全史 / 期日: ランダム / 状態: ランダム
+- 佐藤美咲 / 嫌われる勇気 / 期日: ランダム / 状態: ランダム
+- 高橋健太 / FACTFULNESS / 期日: ランダム / 状態: ランダム
+
+- `reading-plans:check`コマンドを利用する事で状態の自動更新・リマインダー通知の発火をテストできます。
+
 ## URL
 
 - `http://localhost:8080` : phpMyAdmin
 
 ### Web画面
 
-- `http://localhost/books` : 書籍一覧
+- `http://localhost/register` : 会員登録
+- `http://localhost/login` : ログイン
+- `http://localhost/logout` : ログアウト
+- `http://localhost/books` : 書籍一覧 (トップページ)
 - `http://localhost/books/{book}` : 書籍詳細
 - `http://localhost/books/create` : 書籍登録フォーム（ログイン時）
 - `http://localhost/books/{book}/edit` : 書籍編集フォーム（ログイン時）
@@ -191,21 +316,28 @@ password:password
 - `http://localhost/genres/{genre}` : ジャンル詳細（ログイン時）
 - `http://localhost/genres/{genre}/edit` : ジャンル編集フォーム（ログイン時）
 - `http://localhost/ranking` : レビューランキング一覧
+- `http://localhost/reports` : マイ書籍レポート（ログイン時）
+- `http://localhost/reading-plans` : 読書計画一覧（ログイン時）
+- `http://localhost/reading-plans/create` : 読書計画作成フォーム（ログイン時）
+- `http://localhost/reading-plans/{plan}/edit` : 読書計画編集フォーム（ログイン時）
+- `http://localhost/notifications` : 通知一覧（ログイン時）
 
-※ `{book}` や `{genre}`、`{review}` には実際の ID を入れて使用します。
+※ `{book}` や `{genre}`、`{review}` 等にはオブジェクトの ID が入ります。
 
 ## 公開API
 
 ### 提供する機能
 
+- ログインAPI (トークン取得API)
 - 書籍データの取得
 - 書籍一覧取得時の絞込機能
-- 書籍登録
-- 書籍更新
-- 書籍削除
+- 書籍登録 (トークン認証必須)
+- 書籍更新 (トークン認証必須)
+- 書籍削除 (トークン認証必須)
 
 ### エンドポイント一覧
 
+- `http://localhost/api/v1/login` : ログイン（トークン取得）
 - `http://localhost/api/v1/books` : 書籍一覧取得
 - `http://localhost/api/v1/books/{book}` : 書籍詳細取得
 - `http://localhost/api/v1/books` : 書籍作成（POST）
@@ -226,7 +358,33 @@ password:password
 
 ### 各APIのリクエスト例・レスポンス例
 
-#### 1. 書籍一覧取得
+#### 1. ログインAPI
+
+- Method: `POST`
+- Endpoint: `http://localhost/api/v1/login`
+- Request body example:
+
+```json
+{
+    "email": "yamada@example.com",
+    "password": "password"
+}
+```
+
+- Response JSON example:
+
+```json
+{
+    "token": "1|abcdefghijklmnopqrstuvwxyz123456",
+    "user": {
+        "id": 1,
+        "name": "山田太郎",
+        "email": "yamada@example.com"
+    }
+}
+```
+
+#### 2. 書籍一覧取得
 
 - Method: `GET`
 - Endpoint: `http://localhost/api/v1/books`
@@ -261,7 +419,7 @@ password:password
 }
 ```
 
-#### 2. 書籍詳細取得
+#### 3. 書籍詳細取得
 
 - Method: `GET`
 - Endpoint: `http://localhost/api/v1/books/{book}`
@@ -296,10 +454,11 @@ password:password
 }
 ```
 
-#### 3. 書籍作成
+#### 4. 書籍作成
 
 - Method: `POST`
 - Endpoint: `http://localhost/api/v1/books`
+- Note: ヘッダーに `Authorization: Bearer {token}` を付けた認証済みユーザーのみ利用できます。
 - Request body example:
 
 ```json
@@ -341,10 +500,11 @@ password:password
 }
 ```
 
-#### 4. 書籍更新
+#### 5. 書籍更新
 
 - Method: `PUT` or `PATCH`
 - Endpoint: `http://localhost/api/v1/books/{book}`
+- Note: ヘッダーに `Authorization: Bearer {token}` を付けた認証済みユーザーのみ利用できます。
 - Request body example:
 
 ```json
@@ -387,10 +547,11 @@ password:password
 }
 ```
 
-#### 5. 書籍削除
+#### 6. 書籍削除
 
 - Method: `DELETE`
 - Endpoint: `http://localhost/api/v1/books/{book}`
+- Note: ヘッダーに `Authorization: Bearer {token}` を付けた認証済みユーザーのみ利用できます。
 - Response:
 - Status: `204 No Content`
 - Body: none
