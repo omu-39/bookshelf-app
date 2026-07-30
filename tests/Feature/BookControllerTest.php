@@ -7,6 +7,7 @@ use App\Models\Genre;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -628,20 +629,24 @@ class BookControllerTest extends TestCase
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get('/books/isbn/123456789');
 
-        $response->assertJson(['error' => 'ISBNは13桁で入力してください。'])
-            ->assertStatus(400);
+        $response->assertStatus(400)
+            ->assertJson(['error' => 'ISBNは13桁で入力してください。']);
     }
 
-    public function test_存在しないISBNで検索するとエラーになる(): void
+    public function test_GoogleBooksAPIが空のデータを返したら404エラーを返す(): void
     {
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get('/books/isbn/9999999999999');
+        Http::fake([
+            'https://www.googleapis.com/books/v1/volumes*' => Http::response([], 200),
+        ]);
 
-        $response->assertJson(['error' => '書籍が​見つかりませんでした。'])
-            ->assertStatus(404);
+        $response = $this->actingAs($user)->get('/books/isbn/9784088825250');
+
+        $response->assertStatus(404)
+            ->assertJson(['error' => '書籍が​見つかりませんでした。']);
     }
 
-    public function test_Gooble_Books_Apiが500を返したら定義したエラーレスポンスが返る(): void
+    public function test_GoogleBooksAPIがエラーレスポンスを返したら500エラーを返す(): void
     {
         $user = User::factory()->create();
         Http::fake([
@@ -653,6 +658,22 @@ class BookControllerTest extends TestCase
         $response->assertStatus(500)
             ->assertJson([
                 'error' => '書籍情報の取得に失敗しました。',
+            ]);
+    }
+
+    public function test_GoogleBooksAPIとの通信に失敗したら500エラーを返す(): void
+    {
+        $user = User::factory()->create();
+        Http::fake(['https://www.googleapis.com/books/v1/volumes*' => function () {
+                throw new ConnectionException();
+            }
+        ]);
+
+        $response = $this->actingAs($user)->get('/books/isbn/9784873115658');
+
+        $response->assertStatus(500)
+            ->assertJson([
+                'error' => '通信エラーが発生しました。',
             ]);
     }
 }
