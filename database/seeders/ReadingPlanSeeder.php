@@ -36,6 +36,11 @@ class ReadingPlanSeeder extends Seeder
                 'status' => 2,
             ],
             [
+                'target_date' => today(),
+                'completed_at' => null,
+                'status' => 2,
+            ],
+            [
                 'target_date' => today()->subDays(3),
                 'completed_at' => null,
                 'status' => 2,
@@ -44,7 +49,7 @@ class ReadingPlanSeeder extends Seeder
         $books = Book::all();
         $bookIds = $books->pluck('id')->shuffle()->values();
 
-        // 山田太郎(確認用)のシーディング
+        // 山田太郎(全シナリオ)のシーディング
         $mainUser = User::where('id',1)->first();
 
         foreach ($plans as $index => $plan) {
