@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Genres
-    Route::resource('genres', GenreController::class)->except(['show']);
+    Route::resource('genres', GenreController::class);
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
