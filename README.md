@@ -190,8 +190,9 @@ cp .env.example .env
 
 読書計画の状態更新・通知処理を手動実行できます。
 
-````bash
+```bash
 ./vendor/bin/sail artisan reading-plans:check
+```
 
 ## テスト実行
 
@@ -199,7 +200,7 @@ cp .env.example .env
 
 ```bash
 ./vendor/bin/sail artisan test
-````
+```
 
 テストカバレッジを確認する場合は以下のコマンドで確認できます。
 
