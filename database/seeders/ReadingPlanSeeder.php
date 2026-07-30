@@ -36,7 +36,7 @@ class ReadingPlanSeeder extends Seeder
                 'status' => 2,
             ],
             [
-                'target_date' => today(),
+                'target_date' => today()->subDay(),
                 'completed_at' => null,
                 'status' => 2,
             ],
