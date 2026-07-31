@@ -43,7 +43,7 @@ class ReadingPlanSeeder extends Seeder
             [
                 'target_date' => today()->subDays(3),
                 'completed_at' => null,
-                'status' => 2,
+                'status' => 3,
             ],
         ];
         $books = Book::all();
