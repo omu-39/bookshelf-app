@@ -188,7 +188,7 @@ cp .env.example .env
 
 ## Artisan Command
 
-読書計画の状態更新・通知処理を手動実行できます。
+読書計画のステータス更新・通知処理を手動実行できます。
 
 ```bash
 ./vendor/bin/sail artisan reading-plans:check
