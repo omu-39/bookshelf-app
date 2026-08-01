@@ -81,7 +81,7 @@ class GenreControllerTest extends TestCase
         $this->assertDatabaseCount('genres', 1);
     }
 
-    public function test_ジャンル名が体とバリデーションエラーになる(): void
+    public function test_ジャンル名が空だとバリデーションエラーになる(): void
     {
         $user = User::factory()->create();
         $genreContent = ['name' => null];
