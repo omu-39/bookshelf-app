@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Services\BookService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,47 +17,25 @@ use Illuminate\View\View;
 
 class BookController extends Controller
 {
+    private BookService $bookService;
+
+    public function __construct(BookService $bookService)
+    {
+        $this->bookService = $bookService;
+    }
+
     /**
      * 書籍一覧画面の表示
-     * キーワード、ジャンル、並び順でフィルタリングできる
+     * キーワード、ジャンル、並び順による検索条件で絞り込む
      *
      * @param Request $request 検索条件
      * @return View 一覧画面
      */
     public function index(Request $request): View
     {
-        $genres = Genre::all();
-        $query = Book::with('genres');
-
-        // keyword
-        if ($request->filled('keyword')) {
-            $keyword = $request->input('keyword');
-            $query->where(function ($q) use ($keyword) {
-                $q->where('title', 'like', "%{$keyword}%")
-                ->orWhere('author', 'like', "%{$keyword}%");
-            });
-        }
-
-        // genre
-        if ($request->filled('genre')) {
-            $genreId = $request->input('genre');
-            $query->whereHas('genres', function ($q) use ($genreId) {
-                $q->where('genres.id', $genreId);
-            });
-        }
-
-        // sort
-        if ($request->filled('sort')) {
-            $sort = $request->input('sort');
-            $query = match ($sort) {
-                default  => $query->orderBy('created_at', 'desc'),
-                'oldest' => $query->orderBy('created_at', 'asc'),
-                'rating' => $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->orderBy('id', 'asc'),
-                'title'  => $query->orderBy('title', 'asc'),
-            };
-        }
-
-        $books = $query->paginate(10)->withQueryString();
+        $genres = $this->bookService->getGenres();
+        $filters = $request->only(['keyword', 'genre', 'sort']);
+        $books = $this->bookService->getBooks($filters);
 
         return view('books.index', compact('books', 'genres'));
     }
