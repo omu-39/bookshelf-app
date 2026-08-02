@@ -2,9 +2,13 @@
 
 namespace App\Services;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
 use App\Models\Book;
 use App\Models\Genre;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class BookService
 {
@@ -51,8 +55,58 @@ class BookService
      *
      * @return Collection ジャンル一覧
      */
-    public function getGenres()
+    public function getGenres(): Collection
     {
         return Genre::all();
+    }
+
+    /**
+     * 書籍の新規作成とジャンルの紐付け
+     * 
+     * @param array $data 書籍登録データ
+     * @return Book 作成された書籍
+     */
+    public function createBook(array $data): Book
+    {
+        return DB::transaction(function () use ($data) {
+            $book = Book::create([
+                'user_id' => Auth::id(),
+                'title' => $data['title'],
+                'author' => $data['author'],
+                'isbn' => $data['isbn'] ?? null,
+                'published_date' => $data['published_date'] ?? null,
+                'description' => $data['description'] ?? null,
+                'image_url' => $data['image_url'] ?? null,
+            ]);
+
+            $book->genres()->sync($data['genres']);
+
+            return $book;
+        });
+    }
+
+    /**
+     * 書籍の更新とジャンルの紐付け
+     * 
+     * @param array $data 書籍更新データ
+     * @param Book $book 更新対象の書籍
+     * @return Book 更新された書籍
+     */
+    public function updateBook(array $data, Book $book): Book
+    {
+        return DB::transaction(function () use ($data, $book) {
+            $book->update([
+                'title' => $data['title'],
+                'author' => $data['author'],
+                'isbn' => $data['isbn'] ?? null,
+                'published_date' => $data['published_date'] ?? null,
+                'description' => $data['description'] ?? null,
+                'image_url' => $data['image_url'] ?? null,
+            ]);
+
+            $book->genres()->sync($data['genres']);
+
+            return $book;
+        });
     }
 }

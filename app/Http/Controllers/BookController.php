@@ -10,8 +10,6 @@ use App\Services\BookService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 
@@ -47,37 +45,20 @@ class BookController extends Controller
      */
     public function create(): View
     {
-        $genres = Genre::all();
+        $genres = $this->bookService->getGenres();
 
         return view('books.create', compact('genres'));
     }
 
     /**
-     * 書籍の登録
-     * 書籍の新規作成とジャンルの紐付け
+     * 書籍の新規登録
      * 
      * @param StoreBookRequest $request 書籍登録データ
      * @return RedirectResponse 詳細画面
      */
     public function store(StoreBookRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
-
-        $book = DB::transaction(function () use ($validated) {
-            $book = Book::create([
-                'user_id' => Auth::id(),
-                'title' => $validated['title'],
-                'author' => $validated['author'],
-                'isbn' => $validated['isbn'] ?? null,
-                'published_date' => $validated['published_date'] ?? null,
-                'description' => $validated['description'] ?? null,
-                'image_url' => $validated['image_url'] ?? null,
-            ]);
-
-            $book->genres()->sync($validated['genres']);
-
-            return $book;
-        });
+        $book = $this->bookService->createBook($request->validated());
 
         return redirect()->route('books.show', compact('book'))->with('success', '書籍を​登録しました。');
     }
@@ -122,21 +103,7 @@ class BookController extends Controller
     {
         $this->authorize('update', $book);
 
-        $validated = $request->validated();
-
-        DB::transaction(function () use ($validated, $book)
-        {
-            $book->update([
-                'title' => $validated['title'],
-                'author' => $validated['author'],
-                'isbn' => $validated['isbn'] ?? null,
-                'published_date' => $validated['published_date'] ?? null,
-                'description' => $validated['description'] ?? null,
-                'image_url' => $validated['image_url'] ?? null,
-            ]);
-
-            $book->genres()->sync($validated['genres']);
-        });
+        $book = $this->bookService->updateBook($request->validated(), $book);
 
         return redirect()->route('books.show', compact('book'))->with('success', '書籍を更新しました。');
     }
