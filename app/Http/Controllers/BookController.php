@@ -10,7 +10,6 @@ use App\Services\BookService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 
 class BookController extends Controller
@@ -128,46 +127,16 @@ class BookController extends Controller
      * 入力されたISBNから検索する
      *
      * @param string $isbn 入力されたISBN
-     * @return array 書籍情報
+     * @return JsonResponse 書籍情報
      */
     public function fetchByIsbn(string $isbn): JsonResponse
     {
-        $isbn = trim($isbn);
+        $bookData = $this->bookService->fetchBookByIsbn($isbn);
 
-        if (strlen($isbn) !== 13) {
-            return response()->json(['error' => 'ISBNは13桁で入力してください。'], 400);
+        if (isset($bookData['error'])) {
+            return response()->json(['error' => $bookData['error']], $bookData['status']);
         }
 
-        try {
-            $response = Http::timeout(10)->get('https://www.googleapis.com/books/v1/volumes', [
-                'q' => 'isbn:' . $isbn,
-                'maxResults' => 1,
-                'key' => config('services.google_books.key')
-            ]);
-
-            if (! $response->successful()) {
-                return response()->json(['error' => '書籍情報の取得に失敗しました。'], 500);
-            }
-
-            $items = $response->json('items', []);
-            $volumeInfo = $items[0]['volumeInfo'] ?? [];
-
-            if (empty($volumeInfo)) {
-                return response()->json(['error' => '書籍が​見つかりませんでした。'], 404);
-            }
-
-            $imageLinks = $volumeInfo['imageLinks'] ?? [];
-            $imageUrl = $imageLinks['thumbnail'] ?? $imageLinks['smallThumbnail'] ?? null;
-
-            return response()->json([
-                'title' => $volumeInfo['title'] ?? null,
-                'author' => data_get($volumeInfo, 'authors.0'),
-                'description' => $volumeInfo['description'] ?? null,
-                'published_date' => $volumeInfo['publishedDate'] ?? null,
-                'image_url' => $imageUrl,
-            ]);
-        } catch (\Throwable $e) {
-            return response()->json(['error' => '通信エラーが発生しました。'], 500);
-        }
+        return response()->json($bookData);
     }
 }

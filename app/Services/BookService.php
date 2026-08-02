@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Http;
 
 class BookService
 {
@@ -108,5 +109,52 @@ class BookService
 
             return $book;
         });
+    }
+
+    /**
+     * ISBNからGoogle Books APIで書籍情報を取得する
+     *
+     * @param string $isbn ISBNコード
+     * @return array 書籍情報
+     */
+    public function fetchBookByIsbn(string $isbn): array
+    {
+        $isbn = trim($isbn);
+
+        if (strlen($isbn) !== 13) {
+            return ['error' => 'ISBNは13桁で入力してください。', 'status' => 400];
+        }
+
+        try {
+            $response = Http::timeout(10)->get('https://www.googleapis.com/books/v1/volumes', [
+                'q' => 'isbn:' . $isbn,
+                'maxResults' => 1,
+                'key' => config('services.google_books.key')
+            ]);
+
+            if (! $response->successful()) {
+                return ['error' => '書籍情報の取得に失敗しました。', 'status' => 500];
+            }
+
+            $items = $response->json('items', []);
+            $volumeInfo = $items[0]['volumeInfo'] ?? [];
+
+            if (empty($volumeInfo)) {
+                return ['error' => '書籍が​見つかりませんでした。', 'status' => 404];
+            }
+
+            $imageLinks = $volumeInfo['imageLinks'] ?? [];
+            $imageUrl = $imageLinks['thumbnail'] ?? $imageLinks['smallThumbnail'] ?? null;
+
+            return [
+                'title' => $volumeInfo['title'] ?? null,
+                'author' => data_get($volumeInfo, 'authors.0'),
+                'description' => $volumeInfo['description'] ?? null,
+                'published_date' => $volumeInfo['publishedDate'] ?? null,
+                'image_url' => $imageUrl,
+            ];
+        } catch (\Throwable $e) {
+            return ['error' => '通信エラーが発生しました。', 'status' => 500];
+        }
     }
 }
