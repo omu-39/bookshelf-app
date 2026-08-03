@@ -54,4 +54,15 @@ class AuthTokenControllerTest extends TestCase
             ->assertStatus(422)
             ->assertJsonValidationErrors(['password']);
     }
+
+    public function test_ログイン時_存在しないユーザーだと401が返る(): void
+    {
+        $payload= [
+            "email"=> "wrong@example.com",
+            "password" => "password"
+        ];
+
+        $this->postJson("/api/v1/login", $payload)
+            ->assertStatus(401);
+    }
 }
