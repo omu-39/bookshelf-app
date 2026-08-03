@@ -7,7 +7,7 @@ use App\Models\Book;
 use App\Models\Genre;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Http;
 
@@ -59,7 +59,8 @@ class BookService
             'oldest' => $query->orderBy('created_at', 'asc'),
             'rating' => $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->orderBy('id', 'asc'),
             'title' => $query->orderBy('title', 'asc'),
-            default => $query->orderBy('created_at', 'desc'),
+            'newest' => $query->orderBy('created_at', 'desc'),
+            default => $query->orderBy('id', 'asc'),
         };
 
         return $query->paginate($perPage)->withQueryString();
