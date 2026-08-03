@@ -9,47 +9,44 @@ use App\Http\Requests\Api\V1\UpdateBookRequest;
 use App\Http\Resources\Api\V1\BookDetailResource;
 use App\Http\Resources\Api\V1\BookResource;
 use App\Models\Book;
-use App\Models\Genre;
+use App\Services\BookService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
+    private BookService $bookService;
+
+    public function __construct(BookService $bookService)
+    {
+        $this->bookService = $bookService;
+    }
+
     /**
      * 書籍一覧を取得する API エンドポイント。
      * キーワード検索、ジャンル絞り込み、ページネーションに対応。
      *
-     * @param IndexBookRequest $request バリデーション済みの検索条件リクエスト
+     * @param IndexBookRequest $request 検索条件リクエスト
      * @return JsonResponse 書籍一覧とメタ情報を含む JSON レスポンス
      */
     public function index(IndexBookRequest $request): JsonResponse
     {
-        $query = Book::with(['genres', 'reviews'])->withCount('reviews')->withAvg('reviews', 'rating');
-
-        if ($request->filled('keyword')) {
-            $keyword = $request->input('keyword');
-            $query->where('title', 'like', "%{$keyword}%");
-        }
-
-        if ($request->filled('genres')) {
-            $genreIds = Genre::whereIn('name', $request->input('genres'))->pluck('id');
-            $query->whereHas('genres', function ($q) use ($genreIds) {
-                $q->whereIn('genre_id', $genreIds);
-            });
-        }
+        $filters = [
+            'keyword' => $request->input('keyword'),
+            'genres' => $request->input('genres'),
+        ];
 
         $perPage = (int) $request->input('per_page', 20);
-        $books = $query->paginate($perPage);
+        // APIではレビュー件数・平均評価を返すため true を渡す
+        $books = $this->bookService->getBooks($filters, $perPage, withReviews: true);
 
         return response()->json([
             'data' => BookResource::collection($books)->resolve(),
-            'meta' =>[
+            'meta' => [
                 'current_page' => $books->currentPage(),
                 'last_page' => $books->lastPage(),
                 'per_page' => $books->perPage(),
                 'total' => $books->total(),
-            ]
+            ],
         ]);
     }
 
@@ -57,30 +54,12 @@ class BookController extends Controller
      * 書籍を登録する API エンドポイント。
      * Bookモデルを作成し、ジャンルを同期させてから BookDetailResource を返す。
      *
-     * @param StoreBookRequest $request 書籍登録用のバリデーション済みリクエスト
-     * @return JsonResponse 作成された書籍の詳細情報 (201 Created)
+     * @param StoreBookRequest $request 書籍登録データ
+     * @return JsonResponse 作成された書籍のデータ
      */
     public function store(StoreBookRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-
-        $book = DB::transaction(function () use ($validated) {
-            $book = Book::create([
-                'user_id' => Auth::id(),
-                'title' => $validated['title'],
-                'author' => $validated['author'],
-                'isbn' => $validated['isbn'] ?? null,
-                'published_date' => $validated['published_date'] ?? null,
-                'description' => $validated['description'] ?? null,
-                'image_url' => $validated['image_url'] ?? null,
-            ]);
-
-            $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
-            $book->genres()->sync($genreIds);
-            $book->load(['genres']);
-
-            return $book;
-        });
+        $book = $this->bookService->createBook($request->validated());
 
         return (new BookDetailResource($book))
             ->response()
@@ -114,23 +93,7 @@ class BookController extends Controller
     {
         $this->authorize('update', $book);
 
-        $validated = $request->validated();
-
-        DB::transaction(function () use ($book, $validated) {
-            $book->update([
-                'user_id' => Auth::id(),
-                'title' => $validated['title'],
-                'author' => $validated['author'],
-                'isbn' => $validated['isbn'] ?? null,
-                'published_date' => $validated['published_date'] ?? null,
-                'description' => $validated['description'] ?? null,
-                'image_url' => $validated['image_url'] ?? null,
-            ]);
-
-            $genreIds = Genre::whereIn('name', $validated['genres'])->pluck('id');
-            $book->genres()->sync($genreIds);
-            $book->load(['genres']);
-        });
+        $book = $this->bookService->updateBook($request->validated(), $book);
 
         return new BookDetailResource($book);
     }
