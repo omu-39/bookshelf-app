@@ -610,8 +610,27 @@ class BookControllerTest extends TestCase
     public function test_ISBN検索で書籍情報を取得できる(): void
     {
         $user = User::factory()->create();
+
+        Http::fake([
+            'https://www.googleapis.com/books/v1/volumes*' => Http::response([
+                'items' => [
+                    [
+                        'volumeInfo' => [
+                            'title' => 'リーダブルコード',
+                            'authors' => ['Dustin Boswell', 'Trevor Foucher'],
+                            'publishedDate' => '2012-03-01',
+                            'description' => 'コードを読みやすくするための実践的なガイド。',
+                            'imageLinks' => [
+                                'thumbnail' => 'https://example.com/image.jpg',
+                            ],
+                        ],
+                    ],
+                ],
+            ], 200),
+        ]);
+
         // 9784873115658 はリーダブルコードという書籍のISBN
-        $response = $this->actingAs($user)->get('/books/isbn/9784873115658')
+        $response = $this->actingAs($user)->getJson('/books/isbn/9784873115658')
             ->assertOk();
 
         $response->assertJson(['title' => 'リーダブルコード']);
