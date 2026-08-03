@@ -21,9 +21,14 @@ class BookService
      * @param int $perPage 1ページあたりの件数
      * @return LengthAwarePaginator ページネーションされた書籍一覧
      */
-    public function getBooks(array $filters = [], int $perPage = 10): LengthAwarePaginator
+    public function getBooks(array $filters = [], int $perPage = 10, bool $withReviews = false): LengthAwarePaginator
     {
         $query = Book::with('genres');
+
+        if ($withReviews) {
+            // APIレスポンスで使用するレビュー件数と平均評価を取得
+            $query->withCount('reviews')->withAvg('reviews', 'rating');
+        }
 
         if (!empty($filters['keyword'])) {
             $keyword = $filters['keyword'];
@@ -38,6 +43,15 @@ class BookService
             $query->whereHas('genres', function ($q) use ($genreId) {
                 $q->where('genres.id', $genreId);
             });
+        }
+
+        if (!empty($filters['genres'])) {
+            $genreIds = $this->resolveGenreIds($filters['genres']);
+            if ($genreIds->isNotEmpty()) {
+                $query->whereHas('genres', function ($q) use ($genreIds) {
+                    $q->whereIn('genres.id', $genreIds);
+                });
+            }
         }
 
         $sort = $filters['sort'] ?? null;
@@ -62,6 +76,19 @@ class BookService
     }
 
     /**
+     * ジャンルIDまたはジャンル名の配列をジャンルIDのコレクションに変換する
+     *
+     * @param array $genres ジャンルIDまたはジャンル名の配列
+     * @return Collection ジャンルIDのコレクション
+     */
+    private function resolveGenreIds(array $genres): Collection
+    {
+        return Genre::whereIn('id', $genres)
+            ->orWhereIn('name', $genres)
+            ->pluck('id');
+    }
+
+    /**
      * 書籍の新規作成とジャンルの紐付け
      * 
      * @param array $data 書籍登録データ
@@ -80,7 +107,9 @@ class BookService
                 'image_url' => $data['image_url'] ?? null,
             ]);
 
-            $book->genres()->sync($data['genres']);
+            $genreIds = $this->resolveGenreIds($data['genres']);
+            $book->genres()->sync($genreIds);
+            $book->load('genres');
 
             return $book;
         });
@@ -105,7 +134,9 @@ class BookService
                 'image_url' => $data['image_url'] ?? null,
             ]);
 
-            $book->genres()->sync($data['genres']);
+            $genreIds = $this->resolveGenreIds($data['genres']);
+            $book->genres()->sync($genreIds);
+            $book->load('genres');
 
             return $book;
         });
