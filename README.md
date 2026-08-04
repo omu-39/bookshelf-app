@@ -151,7 +151,7 @@ cp .env.example .env
 ### 7. DBのセットアップ
 
 ```bash
-./vendor/bin/sail artisan migrate --seed
+./vendor/bin/sail artisan migrate:fresh --seed
 ```
 
 ### 8. NPM依存パッケージのインストール
