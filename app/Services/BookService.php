@@ -28,7 +28,7 @@ class BookService
         if ($isApi) {
             // APIレスポンスで使用するレビュー件数と平均評価を取得
             $query->withCount('reviews')->withAvg('reviews', 'rating');
-            $query->orderByAsc('id');
+            $query->orderBy('id', 'asc');
         }
 
         if (!empty($filters['keyword'])) {
@@ -53,9 +53,9 @@ class BookService
             });
         }
 
-        if (!$isApi) {
+        if ($isApi === false) {
             $sort = $filters['sort'] ?? null;
-            $query = match ($sort) {
+            match ($sort) {
                 'oldest' => $query->orderBy('created_at', 'asc'),
                 'rating' => $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->orderBy('id', 'asc'),
                 'title' => $query->orderBy('title', 'asc'),
