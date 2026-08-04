@@ -32,6 +32,6 @@ class NotificationController extends Controller
 
         $notification->markAsRead();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', '通知を既読にしました。');
     }
 }

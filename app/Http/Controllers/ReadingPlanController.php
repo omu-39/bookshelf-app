@@ -87,7 +87,7 @@ class ReadingPlanController extends Controller
             'completed_at' => now(),
         ]);
 
-        return redirect()->route('reading-plans.index');
+        return redirect()->route('reading-plans.index')->with('success', '読書計画を完了しました。');
     }
 
     /**
