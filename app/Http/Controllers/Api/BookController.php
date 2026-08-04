@@ -32,7 +32,7 @@ class BookController extends Controller
     {
         $filters = [
             'keyword' => $request->input('keyword'),
-            'genres' => $request->input('genres'),
+            'genreId' => $request->input('genreId'),
         ];
 
         $perPage = (int) $request->input('per_page', 20);

@@ -24,8 +24,7 @@ class IndexBookRequest extends FormRequest
     {
         return [
             'keyword' => ['nullable', 'string', 'max:255'],
-            'genres' => ['nullable', 'array'],
-            'genres.*' => ['string', 'exists:genres,name'],
+            'genreId' => ['nullable', 'integer', 'exists:genres,id'],
             'page' => ['nullable', 'integer', 'min:1'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];
@@ -36,8 +35,8 @@ class IndexBookRequest extends FormRequest
         return [
             'keyword.string' => '検索キーワードは​文字列で​入力してください。',
             'keyword.max' => '検索キーワードは255文字以内で入力してください。',
-            'genres.array' => 'ジャンルは配列で入力してください',
-            'genres.*.exists' => '選択されたジャンルは存在しません。',
+            'genreId.integer' => 'ジャンルは数値型で入力してください。',
+            'genreId.exists' => '選択されたジャンルは存在しません。',
             'page.integer' => 'ページ​番号が​正しく​ありません。',
             'page.min' => 'ページ番号は1以上の数値を指定してください。',
             'per_page.integer' => '表示件数の​指定が​正しく​ありません。',
