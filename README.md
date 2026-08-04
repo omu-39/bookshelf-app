@@ -115,7 +115,7 @@ git clone https://github.com/omu-39/bookshelf-app.git
 ### 2. ディレクトリ移動
 
 ```bash
-cd bookshelf-app-git
+cd bookshelf-app
 ```
 
 ### 3. Sailを含む依存パッケージのインストール
