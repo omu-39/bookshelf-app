@@ -54,7 +54,7 @@ class BookApiTest extends TestCase
         Book::factory()->create(['title' => 'Laravel教本'])->genres()->attach($study);
         Book::factory()->create(['title' => 'LaravelGame'])->genres()->attach($game);
 
-        $response = $this->getJson('/api/v1/books?genres[]=勉強');
+        $response = $this->getJson('/api/v1/books?genreId=' . $study->id);
 
         $response->assertStatus(200);
         $response->assertJsonCount(1, 'data');
@@ -86,22 +86,30 @@ class BookApiTest extends TestCase
         $response->assertJsonValidationErrors(['keyword']);
     }
 
-    public function test_書籍一覧取得時_genresが配列でない場合は422を返す(): void
+    public function test_書籍一覧取得時_genreIdが数値型でない場合は422を返す(): void
     {
-        $response = $this->getJson('/api/v1/books?genres=勉強');
+        $response = $this->getJson('/api/v1/books?genreId=勉強');
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['genres']);
+        $response->assertJsonValidationErrors(['genreId']);
+    }
+
+    public function test_書籍一覧取得時_genreIdが存在しない場合は422を返す(): void
+    {
+        $response = $this->getJson('/api/v1/books?genreId=999');
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['genreId']);
     }
 
     public function test_書籍一覧取得時_存在しないジャンルを指定すると422を返す(): void
     {
         Genre::factory()->create(['name' => '勉強']);
 
-        $response = $this->getJson('/api/v1/books?genres[]=存在しないジャンル');
+        $response = $this->getJson('/api/v1/books?genreId=999');
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['genres.0']);
+        $response->assertJsonValidationErrors(['genreId']);
     }
 
     public function test_書籍一覧取得時_pageが1未満の場合は422を返す(): void

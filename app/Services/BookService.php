@@ -21,13 +21,14 @@ class BookService
      * @param int $perPage 1ページあたりの件数
      * @return LengthAwarePaginator ページネーションされた書籍一覧
      */
-    public function getBooks(array $filters = [], int $perPage = 10, bool $withReviews = false): LengthAwarePaginator
+    public function getBooks(array $filters = [], int $perPage = 10, bool $isApi = false): LengthAwarePaginator
     {
         $query = Book::with('genres');
 
-        if ($withReviews) {
+        if ($isApi) {
             // APIレスポンスで使用するレビュー件数と平均評価を取得
             $query->withCount('reviews')->withAvg('reviews', 'rating');
+            $query->orderBy('id', 'asc');
         }
 
         if (!empty($filters['keyword'])) {
@@ -45,23 +46,22 @@ class BookService
             });
         }
 
-        if (!empty($filters['genres'])) {
-            $genreIds = $this->resolveGenreIds($filters['genres']);
-            if ($genreIds->isNotEmpty()) {
-                $query->whereHas('genres', function ($q) use ($genreIds) {
-                    $q->whereIn('genres.id', $genreIds);
-                });
-            }
+        if (!empty($filters['genreId'])) {
+            $genreId = $filters['genreId'];
+            $query->whereHas('genres', function ($q) use ($genreId) {
+                $q->where('genres.id', $genreId);
+            });
         }
 
-        $sort = $filters['sort'] ?? null;
-        $query = match ($sort) {
-            'oldest' => $query->orderBy('created_at', 'asc'),
-            'rating' => $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->orderBy('id', 'asc'),
-            'title' => $query->orderBy('title', 'asc'),
-            'newest' => $query->orderBy('created_at', 'desc'),
-            default => $query->orderBy('id', 'asc'),
-        };
+        if ($isApi === false) {
+            $sort = $filters['sort'] ?? null;
+            match ($sort) {
+                'oldest' => $query->orderBy('created_at', 'asc'),
+                'rating' => $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->orderBy('id', 'asc'),
+                'title' => $query->orderBy('title', 'asc'),
+                default => $query->orderBy('created_at', 'desc'),
+            };
+        }
 
         return $query->paginate($perPage)->withQueryString();
     }

@@ -32,12 +32,12 @@ class BookController extends Controller
     {
         $filters = [
             'keyword' => $request->input('keyword'),
-            'genres' => $request->input('genres'),
+            'genreId' => $request->input('genreId'),
         ];
 
         $perPage = (int) $request->input('per_page', 20);
         // APIではレビュー件数・平均評価を返すため true を渡す
-        $books = $this->bookService->getBooks($filters, $perPage, withReviews: true);
+        $books = $this->bookService->getBooks($filters, $perPage, isApi: true);
 
         return response()->json([
             'data' => BookResource::collection($books)->resolve(),
