@@ -136,6 +136,12 @@ docker run --rm \
 cp .env.example .env
 ```
 
+`.env` を作成後、以下の環境変数を設定してください。
+
+```env
+GOOGLE_BOOKS_API_KEY=取得したAPIキー
+```
+
 ### 5. Sailの起動
 
 ```bash
