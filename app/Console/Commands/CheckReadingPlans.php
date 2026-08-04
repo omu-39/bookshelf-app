@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Enums\ReadingPlanStatus;
 use App\Models\ReadingPlan;
-use App\Notifications\ExpiredNotification;
 use App\Notifications\OnDueDateNotification;
 use App\Notifications\ThreeDaysAfterNotification;
 use App\Notifications\ThreeDaysBeforeNotification;
@@ -49,7 +48,6 @@ class CheckReadingPlans extends Command
     {
         $this->notifyPlans(today()->addDays(3), ThreeDaysBeforeNotification::class);
         $this->notifyPlans(today(), OnDueDateNotification::class);
-        $this->notifyPlans(today()->subDay(), ExpiredNotification::class);
         $this->notifyPlans(today()->subDays(3), ThreeDaysAfterNotification::class);
         $this->updateExpired();
     }
