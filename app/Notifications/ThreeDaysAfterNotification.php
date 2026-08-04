@@ -40,7 +40,7 @@ class ThreeDaysAfterNotification extends Notification
         return [
             'timing' => 'three_days_after',
             'title'  => '読書計画の期限を過ぎました',
-            'body'   => "『{$this->plan->book->title}』の期限({$this->plan->target_date->format('Y-m-d')})から3日経過しました。",
+            'body'   => "『{$this->plan->book->title}』の期限({$this->plan->target_date->format('Y-m-d')})から3日過ぎました。",
         ];
     }
 }
