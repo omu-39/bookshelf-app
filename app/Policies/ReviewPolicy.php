@@ -7,6 +7,11 @@ use App\Models\User;
 
 class ReviewPolicy
 {
+    public function edit(User $user, Review $review): bool
+    {
+        return $user->id === $review->user_id;
+    }
+
     public function update(User $user, Review $review): bool
     {
         return $user->id === $review->user_id;
