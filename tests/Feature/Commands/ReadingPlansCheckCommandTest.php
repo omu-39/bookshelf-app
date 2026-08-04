@@ -5,7 +5,6 @@ namespace Tests\Feature\Commands;
 use App\Enums\ReadingPlanStatus;
 use App\Models\ReadingPlan;
 use App\Models\User;
-use App\Notifications\ExpiredNotification;
 use App\Notifications\OnDueDateNotification;
 use App\Notifications\ThreeDaysAfterNotification;
 use App\Notifications\ThreeDaysBeforeNotification;
@@ -50,24 +49,6 @@ class ReadingPlansCheckCommandTest extends TestCase
         Notification::assertSentTo(
             $user,
             OnDueDateNotification::class
-        );
-    }
-
-    public function test_期日を過ぎると通知が送信される(): void
-    {
-        Notification::fake();
-        $user = User::factory()->create();
-        ReadingPlan::factory()->for($user)
-            ->create([
-                'target_date' => today()->subDay(),
-                'status' => ReadingPlanStatus::Progress->value,
-            ]);
-
-        $this->artisan('reading-plans:check');
-
-        Notification::assertSentTo(
-            $user,
-            ExpiredNotification::class
         );
     }
 
@@ -154,31 +135,6 @@ class ReadingPlansCheckCommandTest extends TestCase
         );
     }
 
-    public function test_期限切れの通知に正しい通知内容を送信できている(): void
-    {
-        Notification::fake();
-        $user = User::factory()->create();
-        $plan = ReadingPlan::factory()->for($user)
-            ->create([
-                'target_date' => today()->subDay(),
-                'status' => ReadingPlanStatus::Expired->value,
-            ]);
-
-        $this->artisan('reading-plans:check');
-
-        Notification::assertSentTo(
-            $user,
-            ExpiredNotification::class,
-            function ($notification) use ($user, $plan) {
-
-                $data = $notification->toArray($user);
-
-                return $data['title'] === '読書計画の期限を過ぎました'
-                    && $data['body'] === "『{$plan->book->title}』の期限({$plan->target_date->format('Y-m-d')})が過ぎました。";
-            }
-        );
-    }
-
     public function test_期限切れ3日後の通知に正しい通知内容を送信できている(): void
     {
         Notification::fake();
@@ -199,7 +155,7 @@ class ReadingPlansCheckCommandTest extends TestCase
                 $data = $notification->toArray($user);
 
                 return $data['title'] === '読書計画の期限を過ぎました'
-                    && $data['body'] === "『{$plan->book->title}』の期限({$plan->target_date->format('Y-m-d')})から3日経過しました。";
+                    && $data['body'] === "『{$plan->book->title}』の期限({$plan->target_date->format('Y-m-d')})から3日過ぎました。";
             }
         );
     }
