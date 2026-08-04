@@ -37,7 +37,7 @@ class BookController extends Controller
 
         $perPage = (int) $request->input('per_page', 20);
         // APIではレビュー件数・平均評価を返すため true を渡す
-        $books = $this->bookService->getBooks($filters, $perPage, withReviews: true);
+        $books = $this->bookService->getBooks($filters, $perPage, isApi: true);
 
         return response()->json([
             'data' => BookResource::collection($books)->resolve(),
