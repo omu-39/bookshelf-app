@@ -118,7 +118,10 @@ git clone https://github.com/omu-39/bookshelf-app.git
 cd bookshelf-app
 ```
 
-### 3. Sailを含む依存パッケージのインストール
+### 3. Composer依存パッケージのインストール
+
+以下のコマンドを実行し、composer.jsonに定義された依存パッケージをインストールします。
+Laravel Sailや認証機能で使用するLaravel Fortify、Laravel Sanctumなどもこの手順でインストールされます。
 
 ```bash
 docker run --rm \
