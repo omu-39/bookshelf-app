@@ -273,16 +273,18 @@ password:password
 
 ### ジャンル一覧
 
-- 小説
-- ビジネス
-- 技術書
-- 自己啓発
-- エッセイ
-- 歴史
-- 科学
-- 芸術
-- 料理
-- 旅行
+ ジャンル名 / ID
+
+- 小説 / 1
+- ビジネス / 2
+- 技術書 / 3
+- 自己啓発 / 4
+- エッセイ / 5
+- 歴史 / 6
+- 科学 / 7
+- 芸術 / 8
+- 料理 / 9
+- 旅行 / 10
 
 ### 読書計画一覧 (例)
 
@@ -385,11 +387,9 @@ password:password
 
 ```json
 {
-    "token": "1|abcdefghijklmnopqrstuvwxyz123456",
-    "user": {
-        "id": 1,
+    "data": {
         "name": "山田太郎",
-        "email": "yamada@example.com"
+        "token": "1|tAl9VBUL6sVDcVdh17qIdtoHo3XIGEKNqzWtaIevf9fa9026"
     }
 }
 ```
