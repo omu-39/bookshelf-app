@@ -35,7 +35,7 @@ class BookController extends Controller
             'genreId' => $request->input('genreId'),
         ];
 
-        $perPage = (int) $request->input('per_page', 20);
+        $perPage = (int) $request->input('per_page', 10);
         // APIではレビュー件数・平均評価を返すため true を渡す
         $books = $this->bookService->getBooks($filters, $perPage, isApi: true);
 
