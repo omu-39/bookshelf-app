@@ -362,11 +362,12 @@ password:password
 
 - `keyword` : タイトルに対して部分一致検索を行います。
     - 例: `http://localhost/api/v1/books?keyword=Laravel`
-- `genres` : ジャンル名の配列で絞り込みます。
-    - 例: `http://localhost/api/v1/books?genres[]=PHP&genres[]=Web`
+- `genreId` : ジャンルIDで絞り込みます。
+    - 例: `http://localhost/api/v1/books?genreId=1`
 - `page` : 取得するページ番号を指定します。
-- `per_page` : 1ページあたりの表示件数を指定します。
-    - 例: `http://localhost/api/v1/books?per_page=10`
+    - 例: `http://localhost/api/v1/books?page=2`
+- `per_page` : 1ページあたりの表示件数を指定します。 デフォルトの表示件数は10件です。
+    - 例: `http://localhost/api/v1/books?per_page=5`
 
 ### 各APIのリクエスト例・レスポンス例
 
@@ -418,6 +419,9 @@ password:password
             ],
             "average_rating": 4.5,
             "reviews_count": 3
+        }
+        {
+            ...
         }
     ],
     "meta": {
