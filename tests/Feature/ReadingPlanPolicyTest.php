@@ -6,7 +6,6 @@ use App\Enums\ReadingPlanStatus;
 use App\Models\ReadingPlan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ReadingPlanPolicyTest extends TestCase
@@ -18,9 +17,9 @@ class ReadingPlanPolicyTest extends TestCase
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $plan = ReadingPlan::factory()->for($owner)->create([
-                'target_date' => today()->addDays(5),
-                'status' => ReadingPlanStatus::Progress->value,
-            ]);
+            'target_date' => today()->addDays(5),
+            'status' => ReadingPlanStatus::Progress->value,
+        ]);
 
         $this->assertTrue($owner->can('update', $plan));
         $this->assertTrue($owner->can('delete', $plan));
@@ -35,9 +34,9 @@ class ReadingPlanPolicyTest extends TestCase
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $plan = ReadingPlan::factory()->for($owner)->create([
-                'target_date' => today()->addDays(5),
-                'status' => ReadingPlanStatus::Progress->value,
-            ]);
+            'target_date' => today()->addDays(5),
+            'status' => ReadingPlanStatus::Progress->value,
+        ]);
 
         $this->actingAs($other)
             ->get(route('reading-plans.edit', $plan))
@@ -49,9 +48,9 @@ class ReadingPlanPolicyTest extends TestCase
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $plan = ReadingPlan::factory()->for($owner)->create([
-                'target_date' => today()->addDays(5),
-                'status' => ReadingPlanStatus::Progress->value,
-            ]);
+            'target_date' => today()->addDays(5),
+            'status' => ReadingPlanStatus::Progress->value,
+        ]);
 
         $this->actingAs($other)
             ->put(route('reading-plans.update', $plan), ['target_date' => today()->addDays(7)])
@@ -65,9 +64,9 @@ class ReadingPlanPolicyTest extends TestCase
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $plan = ReadingPlan::factory()->for($owner)->create([
-                'target_date' => today()->addDays(5),
-                'status' => ReadingPlanStatus::Progress->value,
-            ]);
+            'target_date' => today()->addDays(5),
+            'status' => ReadingPlanStatus::Progress->value,
+        ]);
 
         $this->actingAs($other)
             ->delete(route('reading-plans.destroy', $plan))
@@ -81,9 +80,9 @@ class ReadingPlanPolicyTest extends TestCase
         $owner = User::factory()->create();
         $other = User::factory()->create();
         $plan = ReadingPlan::factory()->for($owner)->create([
-                'target_date' => today()->addDays(5),
-                'status' => ReadingPlanStatus::Progress->value,
-            ]);
+            'target_date' => today()->addDays(5),
+            'status' => ReadingPlanStatus::Progress->value,
+        ]);
 
         $this->actingAs($other)
             ->post(route('reading-plans.complete', $plan))

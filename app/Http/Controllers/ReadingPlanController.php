@@ -18,14 +18,14 @@ class ReadingPlanController extends Controller
      * 読書計画一覧画面の表示
      * 読書の進行状況で絞込ができる
      *
-     * @param Request $request リクエスト情報
+     * @param  Request  $request  リクエスト情報
      * @return View 読書計画一覧画面
      */
     public function index(Request $request): View
     {
         $query = ReadingPlan::query()
-        ->with('book')
-        ->where('user_id', Auth::id());
+            ->with('book')
+            ->where('user_id', Auth::id());
 
         // HTMLフォームは文字列を送るため数値へキャスト（"" → 0）
         $currentStatus = (int) $request->input('status');
@@ -42,7 +42,7 @@ class ReadingPlanController extends Controller
 
     /**
      * 読書計画作成画面の表示
-     * 
+     *
      * @return View 読書計画作成画面
      */
     public function create(): View
@@ -54,8 +54,8 @@ class ReadingPlanController extends Controller
 
     /**
      * 読書計画の作成処理
-     * 
-     * @param StoreReadingPlanRequest $request 読書計画データ
+     *
+     * @param  StoreReadingPlanRequest  $request  読書計画データ
      * @return RedirectResponse 読書計画一覧画面
      */
     public function store(StoreReadingPlanRequest $request): RedirectResponse
@@ -75,7 +75,7 @@ class ReadingPlanController extends Controller
     /**
      * 読書計画を読了状態に更新する
      *
-     * @param ReadingPlan $plan ルートパラメータから取得した ReadingPlan オブジェクト
+     * @param  ReadingPlan  $plan  ルートパラメータから取得した ReadingPlan オブジェクト
      * @return RedirectResponse 読書計画一覧画面
      */
     public function complete(ReadingPlan $plan): RedirectResponse
@@ -93,7 +93,7 @@ class ReadingPlanController extends Controller
     /**
      * 読書計画編集画面の表示
      *
-     * @param ReadingPlan $plan ルートパラメータから取得した ReadingPlan オブジェクト
+     * @param  ReadingPlan  $plan  ルートパラメータから取得した ReadingPlan オブジェクト
      * @return View 読書計画編集画面
      */
     public function edit(ReadingPlan $plan): View
@@ -108,8 +108,8 @@ class ReadingPlanController extends Controller
     /**
      * 読書計画の更新
      *
-     * @param UpdateReadingPlanRequest $request 更新内容
-     * @param ReadingPlan $plan ルートパラメータから取得した ReadingPlan オブジェクト
+     * @param  UpdateReadingPlanRequest  $request  更新内容
+     * @param  ReadingPlan  $plan  ルートパラメータから取得した ReadingPlan オブジェクト
      * @return RedirectResponse 読書計画一覧画面
      */
     public function update(UpdateReadingPlanRequest $request, ReadingPlan $plan): RedirectResponse
@@ -128,7 +128,7 @@ class ReadingPlanController extends Controller
     /**
      * 読書計画の削除
      *
-     * @param ReadingPlan $plan ルートパラメータから取得した ReadingPlan オブジェクト
+     * @param  ReadingPlan  $plan  ルートパラメータから取得した ReadingPlan オブジェクト
      * @return RedirectResponse 読書計画一覧画面
      */
     public function destroy(ReadingPlan $plan): RedirectResponse

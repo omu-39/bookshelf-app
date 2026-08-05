@@ -49,11 +49,11 @@ class BookPolicyTest extends TestCase
 
         $this->actingAs($other)
             ->put(route('books.update', $book), [
-                    'title' => $book->title,
-                    'author' => $book->author,
-                    'description' => '更新後説明',
-                    'genres' => [$genre->id],
-                ])
+                'title' => $book->title,
+                'author' => $book->author,
+                'description' => '更新後説明',
+                'genres' => [$genre->id],
+            ])
             ->assertForbidden();
 
         $this->assertDatabaseHas('books', ['description' => '更新前説明']);

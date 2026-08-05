@@ -2,13 +2,12 @@
 
 namespace App\Services;
 
-
 use App\Models\Book;
 use App\Models\Genre;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Http;
 
 class BookService
@@ -17,8 +16,8 @@ class BookService
      * 書籍一覧の取得
      * キーワード、ジャンル、並び順による絞込に対応する
      *
-     * @param array $filters 検索条件
-     * @param int $perPage 1ページあたりの件数
+     * @param  array  $filters  検索条件
+     * @param  int  $perPage  1ページあたりの件数
      * @return LengthAwarePaginator ページネーションされた書籍一覧
      */
     public function getBooks(array $filters = [], int $perPage = 10, bool $isApi = false): LengthAwarePaginator
@@ -31,7 +30,7 @@ class BookService
             $query->orderBy('id', 'asc');
         }
 
-        if (!empty($filters['keyword'])) {
+        if (! empty($filters['keyword'])) {
             $keyword = $filters['keyword'];
             $query->where(function ($q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
@@ -39,14 +38,14 @@ class BookService
             });
         }
 
-        if (!empty($filters['genre'])) {
+        if (! empty($filters['genre'])) {
             $genreId = $filters['genre'];
             $query->whereHas('genres', function ($q) use ($genreId) {
                 $q->where('genres.id', $genreId);
             });
         }
 
-        if (!empty($filters['genreId'])) {
+        if (! empty($filters['genreId'])) {
             $genreId = $filters['genreId'];
             $query->whereHas('genres', function ($q) use ($genreId) {
                 $q->where('genres.id', $genreId);
@@ -79,7 +78,7 @@ class BookService
     /**
      * ジャンルIDまたはジャンル名の配列をジャンルIDのコレクションに変換する
      *
-     * @param array $genres ジャンルIDまたはジャンル名の配列
+     * @param  array  $genres  ジャンルIDまたはジャンル名の配列
      * @return Collection ジャンルIDのコレクション
      */
     private function resolveGenreIds(array $genres): Collection
@@ -91,8 +90,8 @@ class BookService
 
     /**
      * 書籍の新規作成とジャンルの紐付け
-     * 
-     * @param array $data 書籍登録データ
+     *
+     * @param  array  $data  書籍登録データ
      * @return Book 作成された書籍
      */
     public function createBook(array $data): Book
@@ -118,9 +117,9 @@ class BookService
 
     /**
      * 書籍の更新とジャンルの紐付け
-     * 
-     * @param array $data 書籍更新データ
-     * @param Book $book 更新対象の書籍
+     *
+     * @param  array  $data  書籍更新データ
+     * @param  Book  $book  更新対象の書籍
      * @return Book 更新された書籍
      */
     public function updateBook(array $data, Book $book): Book
@@ -146,7 +145,7 @@ class BookService
     /**
      * ISBNからGoogle Books APIで書籍情報を取得する
      *
-     * @param string $isbn ISBNコード
+     * @param  string  $isbn  ISBNコード
      * @return array 書籍情報
      */
     public function fetchBookByIsbn(string $isbn): array
@@ -159,9 +158,9 @@ class BookService
 
         try {
             $response = Http::timeout(10)->get('https://www.googleapis.com/books/v1/volumes', [
-                'q' => 'isbn:' . $isbn,
+                'q' => 'isbn:'.$isbn,
                 'maxResults' => 1,
-                'key' => config('services.google_books.key')
+                'key' => config('services.google_books.key'),
             ]);
 
             if (! $response->successful()) {

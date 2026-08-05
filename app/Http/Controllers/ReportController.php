@@ -17,8 +17,6 @@ class ReportController extends Controller
      * - rating_distribution: 評価1〜5の件数分布
      * - top_rated_books: 評価の高い順の上位5冊（重複なし）
      * - genre_ratings: ジャンル別の平均評価と件数（上位5件）
-     *
-     * @return View
      */
     public function index(): View
     {
@@ -31,27 +29,27 @@ class ReportController extends Controller
                 'average_rating' => $reviews->avg('rating'),
             ],
             'rating_distribution' => collect(range(1, 5))
-                ->map(fn($rating) => $reviews->where('rating', $rating)->count())
+                ->map(fn ($rating) => $reviews->where('rating', $rating)->count())
                 ->values(),
             'top_rated_books' => $reviews
-            ->sortByDesc('rating')
-            ->unique('book_id')
-            ->take(5)
-            ->map(fn($review) => [
-                'id' => $review->book->id,
-                'title' => $review->book->title,
-                'author' => $review->book->author,
-                'rating' => $review->rating,
-            ])
-            ->values(),
+                ->sortByDesc('rating')
+                ->unique('book_id')
+                ->take(5)
+                ->map(fn ($review) => [
+                    'id' => $review->book->id,
+                    'title' => $review->book->title,
+                    'author' => $review->book->author,
+                    'rating' => $review->rating,
+                ])
+                ->values(),
             'genre_ratings' => $reviews
-                ->flatMap(fn($review) => $review->book->genres->map(fn($genre) => [
+                ->flatMap(fn ($review) => $review->book->genres->map(fn ($genre) => [
                     'id' => $genre->id,
                     'name' => $genre->name,
                     'rating' => $review->rating,
                 ]))
                 ->groupBy('id')
-                ->map(fn($item) => [
+                ->map(fn ($item) => [
                     'id' => $item->first()['id'],
                     'name' => $item->first()['name'],
                     'average_rating' => $item->avg('rating'),

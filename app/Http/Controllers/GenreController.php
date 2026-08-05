@@ -12,7 +12,7 @@ class GenreController extends Controller
 {
     /**
      * ジャンル一覧画面の表示
-     * 
+     *
      * @return View ジャンル一覧
      */
     public function index(): View
@@ -24,7 +24,7 @@ class GenreController extends Controller
 
     /**
      * ジャンル登録画面の表示
-     * 
+     *
      * @return View ジャンル登録画面
      */
     public function create(): View
@@ -34,8 +34,8 @@ class GenreController extends Controller
 
     /**
      * ジャンルの登録
-     * 
-     * @param StoreGenreRequest $request 登録内容
+     *
+     * @param  StoreGenreRequest  $request  登録内容
      * @return RedirectResponse ジャンル一覧
      */
     public function store(StoreGenreRequest $request): RedirectResponse
@@ -47,8 +47,8 @@ class GenreController extends Controller
 
     /**
      * ジャンル詳細画面の表示
-     * 
-     * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
+     *
+     * @param  Genre  $genre  ルートパラメータから取得したGenreオブジェクト
      * @return View 詳細画面
      */
     public function show(Genre $genre): View
@@ -60,8 +60,8 @@ class GenreController extends Controller
 
     /**
      * ジャンル編集画面の表示
-     * 
-     * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
+     *
+     * @param  Genre  $genre  ルートパラメータから取得したGenreオブジェクト
      * @return View 編集画面
      */
     public function edit(Genre $genre): View
@@ -71,9 +71,9 @@ class GenreController extends Controller
 
     /**
      * ジャンルの更新
-     * 
-     * @param UpdateGenreRequest $request 更新データ
-     * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
+     *
+     * @param  UpdateGenreRequest  $request  更新データ
+     * @param  Genre  $genre  ルートパラメータから取得したGenreオブジェクト
      * @return RedirectResponse ジャンル一覧
      */
     public function update(UpdateGenreRequest $request, Genre $genre): RedirectResponse
@@ -86,8 +86,8 @@ class GenreController extends Controller
     /**
      * ジャンル削除
      * 紐づく書籍がある場合削除ガード
-     * 
-     * @param Genre $genre ルートパラメータから取得したGenreオブジェクト
+     *
+     * @param  Genre  $genre  ルートパラメータから取得したGenreオブジェクト
      * @return RedirectResponse 前のページ
      */
     public function destroy(Genre $genre): RedirectResponse

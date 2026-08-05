@@ -14,9 +14,9 @@ class ReviewController extends Controller
 {
     /**
      * レビューの投稿
-     * 
-     * @param StoreReviewRequest $request 投稿データ
-     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     *
+     * @param  StoreReviewRequest  $request  投稿データ
+     * @param  Book  $book  ルートパラメータから取得したBookオブジェクト
      * @return RedirectResponse 書籍詳細画面
      */
     public function store(StoreReviewRequest $request, Book $book): RedirectResponse
@@ -35,8 +35,8 @@ class ReviewController extends Controller
 
     /**
      * レビュー編集画面の表示
-     * 
-     * @param Review $review ルートパラメータから取得したReviewオブジェクト
+     *
+     * @param  Review  $review  ルートパラメータから取得したReviewオブジェクト
      * @return View 編集画面
      */
     public function edit(Review $review): View
@@ -48,9 +48,9 @@ class ReviewController extends Controller
 
     /**
      * レビューの更新
-     * 
-     * @param UpdateReviewRequest $request 更新データ
-     * @param Review $review ルートパラメータから取得したReviewオブジェクト
+     *
+     * @param  UpdateReviewRequest  $request  更新データ
+     * @param  Review  $review  ルートパラメータから取得したReviewオブジェクト
      * @return RedirectResponse 書籍詳細画面
      */
     public function update(UpdateReviewRequest $request, Review $review): RedirectResponse
@@ -72,8 +72,8 @@ class ReviewController extends Controller
 
     /**
      * レビューの削除
-     * 
-     * @param Review $review ルートパラメータから取得したReviewオブジェクト
+     *
+     * @param  Review  $review  ルートパラメータから取得したReviewオブジェクト
      * @return RedirectResponse 書籍詳細画面
      */
     public function destroy(Review $review): RedirectResponse
@@ -90,8 +90,8 @@ class ReviewController extends Controller
     /**
      * レビューのいいね機能
      * toggle()で切り替え
-     * 
-     * @param Review $review ルートパラメータから取得したReviewオブジェクト
+     *
+     * @param  Review  $review  ルートパラメータから取得したReviewオブジェクト
      * @return RedirectResponse 書籍詳細画面
      */
     public function like(Review $review): RedirectResponse

@@ -10,21 +10,20 @@ class NotificationController extends Controller
 {
     /**
      * ジャンル一覧画面の表示
-     * 
+     *
      * @return View ジャンル一覧
      */
     public function index(): View
     {
-        $notifications = Auth::user()->notifications;;
+        $notifications = Auth::user()->notifications;
 
         return view('notifications.index', compact('notifications'));
     }
 
     /**
      * 通知の既読処理
-     * 
-     * @param string $id ルートパラメータから取得した対象通知のid
-     * @return RedirectResponse
+     *
+     * @param  string  $id  ルートパラメータから取得した対象通知のid
      */
     public function read(string $id): RedirectResponse
     {

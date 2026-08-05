@@ -25,7 +25,7 @@ class BookController extends Controller
      * 書籍一覧画面の表示
      * キーワード、ジャンル、並び順による検索条件で絞り込む
      *
-     * @param Request $request 検索条件
+     * @param  Request  $request  検索条件
      * @return View 一覧画面
      */
     public function index(Request $request): View
@@ -39,8 +39,6 @@ class BookController extends Controller
 
     /**
      * 書籍登録画面の表示
-     * 
-     * @return View
      */
     public function create(): View
     {
@@ -51,8 +49,8 @@ class BookController extends Controller
 
     /**
      * 書籍の新規登録
-     * 
-     * @param StoreBookRequest $request 書籍登録データ
+     *
+     * @param  StoreBookRequest  $request  書籍登録データ
      * @return RedirectResponse 詳細画面
      */
     public function store(StoreBookRequest $request): RedirectResponse
@@ -64,8 +62,8 @@ class BookController extends Controller
 
     /**
      * 書籍詳細画面の表示
-     * 
-     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     *
+     * @param  Book  $book  ルートパラメータから取得したBookオブジェクト
      * @return View 詳細画面
      */
     public function show(Book $book): View
@@ -77,8 +75,8 @@ class BookController extends Controller
 
     /**
      * 書籍編集画面の表示
-     * 
-     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     *
+     * @param  Book  $book  ルートパラメータから取得したBookオブジェクト
      * @return View 詳細画面
      */
     public function edit(Book $book): View
@@ -93,9 +91,9 @@ class BookController extends Controller
     /**
      * 書籍の更新
      * 内容の更新とジャンルを紐づけ
-     * 
-     * @param UpdateBookRequest $request 更新データ
-     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     *
+     * @param  UpdateBookRequest  $request  更新データ
+     * @param  Book  $book  ルートパラメータから取得したBookオブジェクト
      * @return RedirectResponse 詳細画面
      */
     public function update(UpdateBookRequest $request, Book $book): RedirectResponse
@@ -109,8 +107,8 @@ class BookController extends Controller
 
     /**
      * 書籍の削除
-     * 
-     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     *
+     * @param  Book  $book  ルートパラメータから取得したBookオブジェクト
      * @return RedirectResponse 一覧画面
      */
     public function destroy(Book $book): RedirectResponse
@@ -126,7 +124,7 @@ class BookController extends Controller
      * Google Books Api から書籍情報を取得する
      * 入力されたISBNから検索する
      *
-     * @param string $isbn 入力されたISBN
+     * @param  string  $isbn  入力されたISBN
      * @return JsonResponse 書籍情報
      */
     public function fetchByIsbn(string $isbn): JsonResponse

@@ -31,7 +31,7 @@ class AuthenticationTest extends TestCase
         ]);
     }
 
-        public function test_会員登録時_名前が空だとバリデーションエラーになる(): void
+    public function test_会員登録時_名前が空だとバリデーションエラーになる(): void
     {
         $response = $this->post(route('register'), [
             'name' => '',

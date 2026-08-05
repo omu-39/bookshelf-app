@@ -50,7 +50,7 @@ class ReadingPlanSeeder extends Seeder
         $bookIds = $books->pluck('id')->shuffle()->values();
 
         // 山田太郎(全シナリオ)のシーディング
-        $mainUser = User::where('id',1)->first();
+        $mainUser = User::where('id', 1)->first();
 
         foreach ($plans as $index => $plan) {
             ReadingPlan::factory()->create([
@@ -63,7 +63,7 @@ class ReadingPlanSeeder extends Seeder
         // 他のユーザーのシーディング
         $users = User::where('id', '!=', 1)->get();
 
-        foreach($users as $index => $user) {
+        foreach ($users as $index => $user) {
             ReadingPlan::factory()->create([
                 'user_id' => $user->id,
                 'book_id' => $bookIds[$index],

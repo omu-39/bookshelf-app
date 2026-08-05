@@ -156,7 +156,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -175,7 +175,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -194,7 +194,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -213,7 +213,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -232,7 +232,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -251,7 +251,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -260,7 +260,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseCount('books', 0);
     }
 
-    public function test_ISBNに文字列以外を入力するとバリデーションエラーになる(): void
+    public function test_isb_nに文字列以外を入力するとバリデーションエラーになる(): void
     {
         $user = User::factory()->create();
         $bookContent = [
@@ -270,7 +270,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -279,7 +279,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseCount('books', 0);
     }
 
-    public function test_ISBNは13桁でないとバリデーションエラーになる(): void
+    public function test_isb_nは13桁でないとバリデーションエラーになる(): void
     {
         $user = User::factory()->create();
         $bookContent = [
@@ -289,7 +289,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -298,7 +298,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseCount('books', 0);
     }
 
-    public function test_ISBNが重複しているとバリデーションエラーになる(): void
+    public function test_isb_nが重複しているとバリデーションエラーになる(): void
     {
         $user = User::factory()->create();
         Book::factory()->create(['isbn' => '9781234567897']);
@@ -310,7 +310,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -329,7 +329,7 @@ class BookControllerTest extends TestCase
             'published_date' => '9999-99-99',
             'description' => '説明',
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -348,7 +348,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => 1234,
             'image_url' => 'https://example.com/image.jpg',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -357,7 +357,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseCount('books', 0);
     }
 
-    public function test_画像URLが正しいURL形式でないとバリデーションエラーになる(): void
+    public function test_画像_ur_lが正しい_ur_l形式でないとバリデーションエラーになる(): void
     {
         $user = User::factory()->create();
         $bookContent = [
@@ -367,7 +367,7 @@ class BookControllerTest extends TestCase
             'published_date' => '2023-01-01',
             'description' => '説明',
             'image_url' => 'image',
-            'genres' => [1,2],
+            'genres' => [1, 2],
         ];
 
         $this->actingAs($user)->post(route('books.store'), $bookContent)
@@ -440,7 +440,7 @@ class BookControllerTest extends TestCase
         collect(['Laravel', 'JavaScript'])
             ->each(fn ($title) => Book::factory()->create([
                 'title' => $title,
-        ]));
+            ]));
 
         $response = $this->get(route('books.index', ['keyword' => 'lara']))
             ->assertStatus(200);
@@ -535,7 +535,7 @@ class BookControllerTest extends TestCase
             ['title' => 'Laravel'],
             ['title' => 'JavaScript'],
             ['title' => 'PHP'],
-        ])->each(fn($title) => Book::factory()->create($title));
+        ])->each(fn ($title) => Book::factory()->create($title));
 
         $response = $this->get(route('books.index', ['sort' => 'title']))
             ->assertStatus(200);
@@ -592,22 +592,22 @@ class BookControllerTest extends TestCase
             ->count(11)
             ->sequence(
                 fn ($sequence) => [
-                    'title' => 'Laravel' . ($sequence->index + 1),
+                    'title' => 'Laravel'.($sequence->index + 1),
                 ]
             )
             ->create();
         Book::factory()->create(['title' => 'PHP入門']);
 
         $response = $this->get(route('books.index', [
-                'keyword' => 'Laravel',
-                'page' => 2,
-            ]))->assertOk();
+            'keyword' => 'Laravel',
+            'page' => 2,
+        ]))->assertOk();
 
         $response->assertSee('Laravel11')
             ->assertDontSee('PHP入門');
     }
 
-    public function test_ISBN検索で書籍情報を取得できる(): void
+    public function test_isb_n検索で書籍情報を取得できる(): void
     {
         $user = User::factory()->create();
 
@@ -643,7 +643,7 @@ class BookControllerTest extends TestCase
         ]);
     }
 
-    public function test_ISBN検索は13桁でないと検索できない(): void
+    public function test_isb_n検索は13桁でないと検索できない(): void
     {
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get('/books/isbn/123456789');
@@ -652,7 +652,7 @@ class BookControllerTest extends TestCase
             ->assertJson(['error' => 'ISBNは13桁で入力してください。']);
     }
 
-    public function test_GoogleBooksAPIが空のデータを返したら404エラーを返す(): void
+    public function test_google_books_ap_iが空のデータを返したら404エラーを返す(): void
     {
         $user = User::factory()->create();
         Http::fake([
@@ -665,7 +665,7 @@ class BookControllerTest extends TestCase
             ->assertJson(['error' => '書籍が​見つかりませんでした。']);
     }
 
-    public function test_GoogleBooksAPIがエラーレスポンスを返したら500エラーを返す(): void
+    public function test_google_books_ap_iがエラーレスポンスを返したら500エラーを返す(): void
     {
         $user = User::factory()->create();
         Http::fake([
@@ -680,12 +680,12 @@ class BookControllerTest extends TestCase
             ]);
     }
 
-    public function test_GoogleBooksAPIとの通信に失敗したら500エラーを返す(): void
+    public function test_google_books_ap_iとの通信に失敗したら500エラーを返す(): void
     {
         $user = User::factory()->create();
         Http::fake(['https://www.googleapis.com/books/v1/volumes*' => function () {
-                throw new ConnectionException();
-            }
+            throw new ConnectionException;
+        },
         ]);
 
         $response = $this->actingAs($user)->get('/books/isbn/9784873115658');
