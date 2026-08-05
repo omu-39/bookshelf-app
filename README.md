@@ -425,8 +425,8 @@ password:password
             "image_url": "https://example.com/image.jpg",
             "genres": [
                 {
-                    "id": 1,
-                    "name": "PHP"
+                    "id": 3,
+                    "name": "技術書"
                 }
             ],
             "average_rating": 4.5,
@@ -463,8 +463,8 @@ password:password
         "image_url": "https://example.com/image.jpg",
         "genres": [
             {
-                "id": 1,
-                "name": "PHP"
+                "id": 3,
+                "name": "技術書"
             }
         ],
         "reviews": [
@@ -489,14 +489,13 @@ password:password
 
 ```json
 {
-    "id": 1,
     "title": "Laravel実践",
     "author": "佐藤花子",
     "isbn": "9789876543210",
     "published_date": "2024-06-01",
     "description": "実務向けのLaravel解説書です。",
     "image_url": "https://example.com/image.jpg",
-    "genres": ["PHP", "Web"]
+    "genres": ["技術書"]
 }
 ```
 
@@ -514,12 +513,8 @@ password:password
         "image_url": "https://example.com/image.jpg",
         "genres": [
             {
-                "id": 1,
-                "name": "PHP"
-            },
-            {
-                "id": 2,
-                "name": "Web"
+                "id": 3,
+                "name": "技術書"
             }
         ]
     }
@@ -530,19 +525,18 @@ password:password
 
 - Method: `PUT` or `PATCH`
 - Endpoint: `http://localhost/api/v1/books/{book}`
-- Note: ヘッダーに `Authorization: Bearer {token}` を付けた認証済みユーザーのみ利用できます。
+- Note: ヘッダーに `Authorization: Bearer {token}` を付けた認証済みユーザーのみ利用できます。認可機能あり。
 - Request body example:
 
 ```json
 {
-    "user_id": 1,
     "title": "Laravel実践改訂版",
     "author": "佐藤花子",
     "isbn": "9789876543211",
     "published_date": "2024-06-02",
     "description": "改訂版です。",
     "image_url": "https://example.com/image2.jpg",
-    "genres": ["PHP", "Web"]
+    "genres": ["技術書"]
 }
 ```
 
@@ -561,12 +555,8 @@ password:password
         "image_url": "https://example.com/image2.jpg",
         "genres": [
             {
-                "id": 1,
-                "name": "PHP"
-            },
-            {
-                "id": 2,
-                "name": "Web"
+                "id": 3,
+                "name": "技術書"
             }
         ]
     }
@@ -577,7 +567,7 @@ password:password
 
 - Method: `DELETE`
 - Endpoint: `http://localhost/api/v1/books/{book}`
-- Note: ヘッダーに `Authorization: Bearer {token}` を付けた認証済みユーザーのみ利用できます。
+- Note: ヘッダーに `Authorization: Bearer {token}` を付けた認証済みユーザーのみ利用できます。認可機能あり。
 - Response:
 - Status: `204 No Content`
 - Body: none
