@@ -37,10 +37,10 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
 
-            return Limit::perMinute(10)->by($email . $request->ip());
+            return Limit::perMinute(10)->by($email.$request->ip());
         });
 
-        //デフォルトのログイン機能にあるフォームリクエストを自作のものに代替するため、サービスコンテナにバインド
+        // デフォルトのログイン機能にあるフォームリクエストを自作のものに代替するため、サービスコンテナにバインド
         app()->bind(FortifyLoginRequest::class, LoginRequest::class);
     }
 }

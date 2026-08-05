@@ -25,7 +25,7 @@ class BookController extends Controller
      * 書籍一覧を取得する API エンドポイント。
      * キーワード検索、ジャンル絞り込み、ページネーションに対応。
      *
-     * @param IndexBookRequest $request 検索条件リクエスト
+     * @param  IndexBookRequest  $request  検索条件リクエスト
      * @return JsonResponse 書籍一覧とメタ情報を含む JSON レスポンス
      */
     public function index(IndexBookRequest $request): JsonResponse
@@ -54,7 +54,7 @@ class BookController extends Controller
      * 書籍を登録する API エンドポイント。
      * Bookモデルを作成し、ジャンルを同期させてから BookDetailResource を返す。
      *
-     * @param StoreBookRequest $request 書籍登録データ
+     * @param  StoreBookRequest  $request  書籍登録データ
      * @return JsonResponse 作成された書籍のデータ
      */
     public function store(StoreBookRequest $request): JsonResponse
@@ -70,7 +70,7 @@ class BookController extends Controller
      * 書籍詳細情報を取得する API エンドポイント。
      * 紐づくジャンルとレビューを読み込んで BookDetailResource を返す。
      *
-     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @param  Book  $book  ルートパラメータから取得したBookオブジェクト
      * @return BookDetailResource 書籍の詳細情報
      */
     public function show(Book $book): BookDetailResource
@@ -85,8 +85,8 @@ class BookController extends Controller
      * 入力値で Book を更新し、ジャンルを同期したうえで
      * 更新後の書籍情報を BookDetailResource として返す。
      *
-     * @param UpdateBookRequest $request 書籍更新用のバリデーション済みリクエスト
-     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @param  UpdateBookRequest  $request  書籍更新用のバリデーション済みリクエスト
+     * @param  Book  $book  ルートパラメータから取得したBookオブジェクト
      * @return BookDetailResource 更新された書籍の詳細情報
      */
     public function update(UpdateBookRequest $request, Book $book): BookDetailResource
@@ -101,7 +101,7 @@ class BookController extends Controller
     /**
      * 書籍を削除する API エンドポイント。
      *
-     * @param Book $book ルートパラメータから取得したBookオブジェクト
+     * @param  Book  $book  ルートパラメータから取得したBookオブジェクト
      * @return JsonResponse 削除成功時は 204 No Content を返す
      */
     public function destroy(Book $book): JsonResponse

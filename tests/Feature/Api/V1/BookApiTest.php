@@ -30,7 +30,7 @@ class BookApiTest extends TestCase
             'data' => [
                 '*' => ['id', 'title', 'author', 'image_url', 'genres', 'average_rating', 'reviews_count'],
             ],
-            'meta' => ['current_page','last_page', 'per_page', 'total'],
+            'meta' => ['current_page', 'last_page', 'per_page', 'total'],
         ]);
     }
 
@@ -54,7 +54,7 @@ class BookApiTest extends TestCase
         Book::factory()->create(['title' => 'Laravel教本'])->genres()->attach($study);
         Book::factory()->create(['title' => 'LaravelGame'])->genres()->attach($game);
 
-        $response = $this->getJson('/api/v1/books?genreId=' . $study->id);
+        $response = $this->getJson('/api/v1/books?genreId='.$study->id);
 
         $response->assertStatus(200);
         $response->assertJsonCount(1, 'data');
@@ -80,13 +80,13 @@ class BookApiTest extends TestCase
 
     public function test_書籍一覧取得時_keywordが255文字を超えると422を返す(): void
     {
-        $response = $this->getJson('/api/v1/books?keyword=' . str_repeat('a', 256));
+        $response = $this->getJson('/api/v1/books?keyword='.str_repeat('a', 256));
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['keyword']);
     }
 
-    public function test_書籍一覧取得時_genreIdが数値型でない場合は422を返す(): void
+    public function test_書籍一覧取得時_genre_idが数値型でない場合は422を返す(): void
     {
         $response = $this->getJson('/api/v1/books?genreId=勉強');
 
@@ -94,7 +94,7 @@ class BookApiTest extends TestCase
         $response->assertJsonValidationErrors(['genreId']);
     }
 
-    public function test_書籍一覧取得時_genreIdが存在しない場合は422を返す(): void
+    public function test_書籍一覧取得時_genre_idが存在しない場合は422を返す(): void
     {
         $response = $this->getJson('/api/v1/books?genreId=999');
 
@@ -188,13 +188,13 @@ class BookApiTest extends TestCase
         $genre = Genre::factory()->create();
 
         $payload = [
-            "title" => "Laravel",
-            "author" => "Taylor Otwell",
-            "isbn" => "1111111111111",
-            "published_date" => "2011-01-01",
-            "description" => "Webアプリケーション開発で広く使われている、非常に人気のあるPHPフレームワーク",
-            "image_url" => null,
-            "genres" => [$genre->name],
+            'title' => 'Laravel',
+            'author' => 'Taylor Otwell',
+            'isbn' => '1111111111111',
+            'published_date' => '2011-01-01',
+            'description' => 'Webアプリケーション開発で広く使われている、非常に人気のあるPHPフレームワーク',
+            'image_url' => null,
+            'genres' => [$genre->name],
         ];
 
         $response = $this->postJson('api/v1/books', $payload);
@@ -212,13 +212,13 @@ class BookApiTest extends TestCase
         $genre = Genre::factory()->create();
 
         $payload = [
-            "title" => "Laravel",
-            "author" => "Taylor Otwell",
-            "isbn" => "1111111111111",
-            "published_date" => "2011-01-01",
-            "description" => "Webアプリケーション開発で広く使われている、非常に人気のあるPHPフレームワーク",
-            "image_url" => null,
-            "genres" => [$genre->name],
+            'title' => 'Laravel',
+            'author' => 'Taylor Otwell',
+            'isbn' => '1111111111111',
+            'published_date' => '2011-01-01',
+            'description' => 'Webアプリケーション開発で広く使われている、非常に人気のあるPHPフレームワーク',
+            'image_url' => null,
+            'genres' => [$genre->name],
         ];
 
         $this->postJson('api/v1/books', $payload)
@@ -311,7 +311,7 @@ class BookApiTest extends TestCase
             ->assertJsonValidationErrors(['author']);
     }
 
-    public function test_書籍登録時_ISBNが13桁でない場合は422を返す(): void
+    public function test_書籍登録時_isb_nが13桁でない場合は422を返す(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
@@ -332,7 +332,7 @@ class BookApiTest extends TestCase
             ->assertJsonValidationErrors(['isbn']);
     }
 
-    public function test_書籍登録時_登録済みのISBNを指定した場合は422を返す(): void
+    public function test_書籍登録時_登録済みの_isb_nを指定した場合は422を返す(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
@@ -399,7 +399,7 @@ class BookApiTest extends TestCase
             ->assertJsonValidationErrors(['description']);
     }
 
-    public function test_書籍登録時_画像URLが不正な形式の場合は422を返す(): void
+    public function test_書籍登録時_画像_ur_lが不正な形式の場合は422を返す(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
@@ -488,13 +488,13 @@ class BookApiTest extends TestCase
         $book = Book::factory()->for($user)->create(['title' => '更新前']);
 
         $payload = [
-            "title" => "更新後",
-            "author" => "user",
-            "isbn" => "1111111111111",
-            "published_date" => "2011-01-01",
-            "description" => "updated",
-            "image_url" => null,
-            "genres" => [$genre->name],
+            'title' => '更新後',
+            'author' => 'user',
+            'isbn' => '1111111111111',
+            'published_date' => '2011-01-01',
+            'description' => 'updated',
+            'image_url' => null,
+            'genres' => [$genre->name],
         ];
 
         $response = $this->putJson("/api/v1/books/{$book->id}", $payload);
@@ -511,13 +511,13 @@ class BookApiTest extends TestCase
         $book = Book::factory()->for($user)->create(['title' => '更新前']);
 
         $payload = [
-            "title" => "更新後",
-            "author" => "user",
-            "isbn" => "1111111111111",
-            "published_date" => "2011-01-01",
-            "description" => "updated",
-            "image_url" => null,
-            "genres" => [$genre->name],
+            'title' => '更新後',
+            'author' => 'user',
+            'isbn' => '1111111111111',
+            'published_date' => '2011-01-01',
+            'description' => 'updated',
+            'image_url' => null,
+            'genres' => [$genre->name],
         ];
 
         $this->putJson("/api/v1/books/{$book->id}", $payload)
@@ -614,7 +614,7 @@ class BookApiTest extends TestCase
             ->assertJsonValidationErrors(['author']);
     }
 
-    public function test_書籍更新時_ISBNが13桁でない場合は422を返す(): void
+    public function test_書籍更新時_isb_nが13桁でない場合は422を返す(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
@@ -636,7 +636,7 @@ class BookApiTest extends TestCase
             ->assertJsonValidationErrors(['isbn']);
     }
 
-    public function test_書籍更新時_他の書籍と重複するISBNを指定した場合は422を返す(): void
+    public function test_書籍更新時_他の書籍と重複する_isb_nを指定した場合は422を返す(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
@@ -660,7 +660,7 @@ class BookApiTest extends TestCase
             ->assertJsonValidationErrors(['isbn']);
     }
 
-    public function test_書籍更新時_自分のISBNのまま更新できる(): void
+    public function test_書籍更新時_自分の_isb_nのまま更新できる(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
@@ -729,7 +729,7 @@ class BookApiTest extends TestCase
             ->assertJsonValidationErrors(['description']);
     }
 
-    public function test_書籍更新時_画像URLが不正な形式の場合は422を返す(): void
+    public function test_書籍更新時_画像_ur_lが不正な形式の場合は422を返す(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);

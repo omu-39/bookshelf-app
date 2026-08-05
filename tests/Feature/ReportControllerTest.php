@@ -42,9 +42,11 @@ class ReportControllerTest extends TestCase
 
         $response->assertViewHas('stats', function ($stats) {
             $this->assertSame(3, $stats['summary']['total_reviews']);
+
             return true;
         });
     }
+
     public function test_読了冊数が正しく集計される()
     {
         $user = User::factory()->create();
@@ -64,6 +66,7 @@ class ReportControllerTest extends TestCase
 
         $response->assertViewHas('stats', function ($stats) {
             $this->assertSame(2, $stats['summary']['books_read']);
+
             return true;
         });
     }
@@ -76,7 +79,7 @@ class ReportControllerTest extends TestCase
             ['rating' => 5],
             ['rating' => 3],
             ['rating' => 4],
-        ])->each(fn($rating) => Review::factory()->create([
+        ])->each(fn ($rating) => Review::factory()->create([
             'user_id' => $user->id,
             'rating' => $rating['rating'],
         ]));
@@ -87,6 +90,7 @@ class ReportControllerTest extends TestCase
 
         $response->assertViewHas('stats', function ($stats) {
             $this->assertSame(4, $stats['summary']['average_rating']);
+
             return true;
         });
     }
@@ -100,7 +104,7 @@ class ReportControllerTest extends TestCase
             ['rating' => 5],
             ['rating' => 4],
             ['rating' => 2],
-        ])->each(fn($rating) => Review::factory()->create([
+        ])->each(fn ($rating) => Review::factory()->create([
             'user_id' => $user->id,
             'rating' => $rating['rating'],
         ]));

@@ -39,8 +39,8 @@ class ThreeDaysBeforeNotification extends Notification
     {
         return [
             'timing' => 'three_days_before',
-            'title'  => '読書計画の期限が近づいています',
-            'body'   => "『{$this->plan->book->title}』の期限は {$this->plan->target_date->format('Y-m-d')} です。",
+            'title' => '読書計画の期限が近づいています',
+            'body' => "『{$this->plan->book->title}』の期限は {$this->plan->target_date->format('Y-m-d')} です。",
         ];
     }
 }

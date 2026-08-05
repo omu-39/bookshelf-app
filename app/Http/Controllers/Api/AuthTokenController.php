@@ -12,14 +12,14 @@ class AuthTokenController extends Controller
     /**
      * APIトークンを発行するエンドポイント
      *
-     * @param LoginRequest $request ログイン情報
+     * @param  LoginRequest  $request  ログイン情報
      * @return JsonResponse APIトークン
      */
     public function login(LoginRequest $request): LoginResource|JsonResponse
     {
-        if (!auth()->attempt($request->only('email', 'password'))) {
+        if (! auth()->attempt($request->only('email', 'password'))) {
             return response()->json([
-                'message' => 'ログイン情報が​登録されていません。'
+                'message' => 'ログイン情報が​登録されていません。',
             ], 401);
         }
 

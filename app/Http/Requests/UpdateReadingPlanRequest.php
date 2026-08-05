@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateReadingPlanRequest extends FormRequest
@@ -17,7 +18,7 @@ class UpdateReadingPlanRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -31,7 +32,7 @@ class UpdateReadingPlanRequest extends FormRequest
         return [
             'target_date.required' => '期日は必須です。',
             'target_date.date' => '期日は​有効な​日付形式で​入力してください。',
-            'target_date.after_or_equal' => '期日は今日以降の日付を指定してください。'
+            'target_date.after_or_equal' => '期日は今日以降の日付を指定してください。',
         ];
     }
 }

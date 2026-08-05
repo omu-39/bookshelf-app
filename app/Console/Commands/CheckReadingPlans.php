@@ -31,7 +31,7 @@ class CheckReadingPlans extends Command
             ->whereDate('target_date', $date)
             ->where('status', '!=', ReadingPlanStatus::Completed->value)
             ->with('book')
-            ->each(fn($plan) => $plan->user?->notify(new $notification($plan)));
+            ->each(fn ($plan) => $plan->user?->notify(new $notification($plan)));
     }
 
     private function updateExpired()

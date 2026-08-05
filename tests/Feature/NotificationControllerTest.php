@@ -37,7 +37,7 @@ class NotificationControllerTest extends TestCase
             'type' => ThreeDaysBeforeNotification::class,
             'data' => [
                 'title' => '読書計画の期限が近づいています',
-            ]
+            ],
         ]);
 
         $this->actingAs($user)
