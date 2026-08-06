@@ -35,13 +35,15 @@ class ReportController extends Controller
                 ->sortByDesc('rating')
                 ->unique('book_id')
                 ->take(5)
+                ->filter(function ($review) {
+                    return $review->rating >= 4;
+                })
                 ->map(fn ($review) => [
                     'id' => $review->book->id,
                     'title' => $review->book->title,
                     'author' => $review->book->author,
                     'rating' => $review->rating,
-                ])
-                ->values(),
+                ])->values(),
             'genre_ratings' => $reviews
                 ->flatMap(fn ($review) => $review->book->genres->map(fn ($genre) => [
                     'id' => $genre->id,
